@@ -1,0 +1,36 @@
+name: paperlink
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+  # 🔥 ADD THIS PACKAGE FOR APP ICONS
+  flutter_launcher_icons: ^0.13.1
+
+# 🔥 APP ICON CONFIGURATION
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+
+flutter:
+  uses-material-design: true
+
+  # 🔥 MAKE SURE YOUR ICON ASSET PATH EXISTS
+  assets:
+    - assets/icon/app_icon.png

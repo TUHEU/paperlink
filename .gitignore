@@ -1,0 +1,39 @@
+﻿# Flutter/Dart/Pub
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Android
+/android/.gradle
+/android/local.properties
+/android/**/GeneratedPluginRegistrant.java
+
+# iOS
+/ios/.generated/
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Environment files
+.env
+.env.*
