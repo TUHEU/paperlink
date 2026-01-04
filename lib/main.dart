@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:io'; // 🔥 ADD THIS
-import 'package:image_picker/image_picker.dart'; // 🔥 ADD THIS
+import 'dart:io'; // For file operations
+import 'package:image_picker/image_picker.dart'; // For camera and gallery access
 
 void main() {
+  // Initialize Flutter binding before any UI rendering
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Configure system UI overlay (status bar) appearance
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
     ),
   );
+
+  // Start the application with the main widget
   runApp(const PaperLinkApp());
 }
 
+// =============================================================================
+// MAIN APPLICATION WIDGET - ROOT OF THE APP
+// =============================================================================
+// This is the main application class that sets up the MaterialApp with:
+// - Global theme configuration
+// - App-wide navigation structure
+// - Overall app styling and behavior
 class PaperLinkApp extends StatelessWidget {
   const PaperLinkApp({super.key});
 
@@ -22,20 +34,29 @@ class PaperLinkApp extends StatelessWidget {
     return MaterialApp(
       title: 'PaperLink',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-        fontFamily: 'Roboto',
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+        ), // Color scheme based on blue
+        useMaterial3: true, // Use Material Design 3
+        fontFamily: 'Roboto', // Global font family
         appBarTheme: const AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          elevation: 0,
+          elevation: 0, // No shadow for app bar
         ),
       ),
-      debugShowCheckedModeBanner: false,
-      home: const WelcomePage(),
+      debugShowCheckedModeBanner: false, // Remove debug banner in release mode
+      home: const WelcomePage(), // Initial screen
     );
   }
 }
 
+// =============================================================================
+// WELCOME PAGE - LANDING SCREEN WITH AUTHENTICATION OPTIONS
+// =============================================================================
+// This is the first screen users see, featuring:
+// - Gradient background for visual appeal
+// - Two main navigation options: Admin Login and Student Access
+// - Smooth transition animations between screens
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
@@ -47,7 +68,10 @@ class WelcomePage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF1565C0), Color(0xFF4A148C)],
+            colors: [
+              Color(0xFF1565C0),
+              Color(0xFF4A148C),
+            ], // Blue to purple gradient
           ),
         ),
         child: Center(
@@ -56,8 +80,11 @@ class WelcomePage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // App icon
                 const Icon(Icons.school, size: 100, color: Colors.white),
                 const SizedBox(height: 20),
+
+                // App title with shadow effect
                 const Text(
                   'PaperLink',
                   style: TextStyle(
@@ -78,6 +105,8 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, color: Colors.white70),
                 ),
                 const SizedBox(height: 50),
+
+                // Admin Login Button - Constrained to maximum width
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 300),
                   child: ElevatedButton(
@@ -109,6 +138,8 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                // Student Access Button
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 300),
                   child: ElevatedButton(
@@ -140,6 +171,8 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
+
+                // Footer text
                 const Text(
                   'Educational portal',
                   style: TextStyle(fontSize: 14, color: Colors.white70),
@@ -156,6 +189,7 @@ class WelcomePage extends StatelessWidget {
     );
   }
 
+  // Navigation method for Admin Login with fade transition
   void _navigateToAdmin(BuildContext context) {
     Navigator.push(
       context,
@@ -169,6 +203,7 @@ class WelcomePage extends StatelessWidget {
     );
   }
 
+  // Navigation method for Student Access with fade transition and replacement
   void _navigateToStudent(BuildContext context) {
     Navigator.pushReplacement(
       context,
@@ -183,6 +218,14 @@ class WelcomePage extends StatelessWidget {
   }
 }
 
+// =============================================================================
+// ADMIN LOGIN PAGE - AUTHENTICATION FOR ADMINISTRATORS
+// =============================================================================
+// Stateful widget that handles admin authentication with:
+// - Username and password input
+// - Password visibility toggle
+// - Form validation
+// - Forgot password functionality
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({super.key});
 
@@ -191,14 +234,22 @@ class AdminLoginPage extends StatefulWidget {
 }
 
 class _AdminLoginPageState extends State<AdminLoginPage> {
+  // Text editing controllers for form fields
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  // ValueNotifier for reactive UI updates (password visibility)
   final ValueNotifier<bool> _isPasswordVisible = ValueNotifier(false);
+
+  // ValueNotifier for loading state during login
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
+
+  // Focus node for managing keyboard focus
   final FocusNode _passwordFocusNode = FocusNode();
 
   @override
   void dispose() {
+    // Clean up all controllers and listeners to prevent memory leaks
     _usernameController.dispose();
     _passwordController.dispose();
     _isPasswordVisible.dispose();
@@ -213,7 +264,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context), // Back navigation
         ),
         title: const Text('Admin Login'),
       ),
@@ -223,6 +274,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
+
+            // Admin icon
             const Center(
               child: Icon(
                 Icons.admin_panel_settings,
@@ -231,6 +284,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 20),
+
+            // Page title
             const Center(
               child: Text(
                 'Admin Portal',
@@ -238,6 +293,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 10),
+
+            // Subtitle
             const Center(
               child: Text(
                 'Password-based secure access',
@@ -245,10 +302,13 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 40),
+
+            // Username field
             TextFormField(
               controller: _usernameController,
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
+              textInputAction: TextInputAction.next, // Keyboard next button
+              onFieldSubmitted: (_) =>
+                  _passwordFocusNode.requestFocus(), // Move to password field
               decoration: InputDecoration(
                 labelText: 'Admin Name',
                 prefixIcon: const Icon(Icons.person),
@@ -258,15 +318,17 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 20),
+
+            // Password field with visibility toggle using ValueListenableBuilder
             ValueListenableBuilder<bool>(
               valueListenable: _isPasswordVisible,
               builder: (context, isVisible, child) {
                 return TextFormField(
                   controller: _passwordController,
                   focusNode: _passwordFocusNode,
-                  obscureText: !isVisible,
-                  textInputAction: TextInputAction.done,
-                  onFieldSubmitted: (_) => _loginAsAdmin(),
+                  obscureText: !isVisible, // Toggle password visibility
+                  textInputAction: TextInputAction.done, // Keyboard done button
+                  onFieldSubmitted: (_) => _loginAsAdmin(), // Submit on done
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock),
@@ -275,7 +337,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                         isVisible ? Icons.visibility : Icons.visibility_off,
                       ),
                       onPressed: () {
-                        _isPasswordVisible.value = !_isPasswordVisible.value;
+                        _isPasswordVisible.value =
+                            !_isPasswordVisible.value; // Toggle state
                       },
                     ),
                     border: OutlineInputBorder(
@@ -286,6 +349,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               },
             ),
             const SizedBox(height: 10),
+
+            // Forgot password link
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -296,6 +361,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 30),
+
+            // Login button with loading state
             ValueListenableBuilder<bool>(
               valueListenable: _isLoading,
               builder: (context, isLoading, child) {
@@ -303,7 +370,9 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: isLoading ? null : _loginAsAdmin,
+                    onPressed: isLoading
+                        ? null
+                        : _loginAsAdmin, // Disable when loading
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
@@ -332,8 +401,12 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               },
             ),
             const SizedBox(height: 20),
+
+            // Divider for visual separation
             const Divider(),
             const SizedBox(height: 20),
+
+            // Switch to student access
             Center(
               child: TextButton(
                 onPressed: () {
@@ -343,6 +416,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       pageBuilder: (_, __, ___) => const StudentHomePage(),
                       transitionsBuilder: (_, animation, __, child) {
                         return SlideTransition(
+                          // Slide animation
                           position: Tween<Offset>(
                             begin: const Offset(1, 0),
                             end: Offset.zero,
@@ -363,10 +437,12 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     );
   }
 
+  // Login validation and navigation
   Future<void> _loginAsAdmin() async {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
+    // Form validation
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -377,7 +453,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       return;
     }
 
-    // Check for correct credentials
+    // Hardcoded credential check (in real app, use secure authentication)
     if (username != 'Fahdil' || password != 'Fahdil@1') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -388,12 +464,14 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       return;
     }
 
-    _isLoading.value = true;
+    _isLoading.value = true; // Show loading indicator
 
+    // Simulate API call delay
     await Future.delayed(const Duration(milliseconds: 500));
 
-    _isLoading.value = false;
+    _isLoading.value = false; // Hide loading indicator
 
+    // Navigate to admin home page on successful login
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -406,13 +484,14 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     );
   }
 
+  // Show forgot password dialog
   void _showForgotPasswordDialog(BuildContext context) {
     final emailController = TextEditingController();
     final focusNode = FocusNode();
 
     showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: true, // Allow closing by tapping outside
       builder: (context) {
         return AlertDialog(
           title: const Text('Reset Password'),
@@ -427,7 +506,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               TextFormField(
                 controller: emailController,
                 focusNode: focusNode,
-                autofocus: true,
+                autofocus: true, // Auto-focus on the field
                 decoration: InputDecoration(
                   labelText: 'Admin Email',
                   border: OutlineInputBorder(
@@ -442,7 +521,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(context), // Close dialog
               child: const Text('Cancel'),
             ),
             ElevatedButton(
@@ -455,11 +534,13 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
         );
       },
     ).then((_) {
+      // Clean up controllers after dialog closes
       emailController.dispose();
       focusNode.dispose();
     });
   }
 
+  // Process password reset request
   void _processPasswordReset(BuildContext context, String email) {
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -471,7 +552,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       return;
     }
 
-    Navigator.pop(context);
+    Navigator.pop(context); // Close dialog
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Password reset instructions sent to your email'),
@@ -481,17 +562,86 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   }
 }
 
-// 🔥 GLOBAL DATA MANAGEMENT
+// =============================================================================
+// IMAGE STORAGE MANAGER - SINGLETON FOR IMAGE MANAGEMENT
+// =============================================================================
+// OOP CONCEPT: Singleton Pattern
+// This class manages image storage in memory using:
+// - Singleton design pattern (single instance throughout app)
+// - In-memory storage using Maps
+// - Image retrieval by paper ID
+// - File path management
+class ImageStorageManager {
+  // Singleton instance (private constructor)
+  static final ImageStorageManager _instance = ImageStorageManager._internal();
+
+  // Factory constructor to return the singleton instance
+  factory ImageStorageManager() {
+    return _instance;
+  }
+
+  // Private constructor
+  ImageStorageManager._internal();
+
+  // In-memory storage using Maps
+  Map<String, File> _imageStorage = {}; // Stores File objects
+  Map<String, String> _imagePaths = {}; // Stores file paths
+
+  // Store image with associated paper ID
+  void storeImage(String paperId, File imageFile) {
+    _imageStorage[paperId] = imageFile;
+    _imagePaths[paperId] = imageFile.path;
+  }
+
+  // Retrieve image by paper ID
+  File? getImage(String paperId) {
+    return _imageStorage[paperId];
+  }
+
+  // Get image path by paper ID
+  String? getImagePath(String paperId) {
+    return _imagePaths[paperId];
+  }
+
+  // Remove image from storage
+  void removeImage(String paperId) {
+    _imageStorage.remove(paperId);
+    _imagePaths.remove(paperId);
+  }
+
+  // Check if image exists for paper
+  bool hasImage(String paperId) {
+    return _imageStorage.containsKey(paperId);
+  }
+}
+
+// =============================================================================
+// PAPER DATA MANAGER - CENTRAL DATA MANAGEMENT CLASS
+// =============================================================================
+// OOP CONCEPTS: Singleton Pattern, Data Encapsulation, Separation of Concerns
+// This class serves as the central data repository with:
+// - Global access to paper data
+// - Notification management
+// - Image storage integration
+// - Paper status management
+// - CRUD operations for papers
 class PaperDataManager {
+  // Singleton instance
   static final PaperDataManager _instance = PaperDataManager._internal();
 
+  // Factory constructor
   factory PaperDataManager() {
     return _instance;
   }
 
+  // Private constructor
   PaperDataManager._internal();
 
-  // 🔥 SHARED PAPERS LIST - Both Admin and Student can access
+  // Composition: Contains an ImageStorageManager instance
+  final ImageStorageManager imageStorage = ImageStorageManager();
+
+  // SHARED PAPERS LIST - Central data store accessible by both Admin and Student
+  // Using List of Maps for flexible data structure
   List<Map<String, dynamic>> allPapers = [
     {
       'id': '1',
@@ -501,48 +651,37 @@ class PaperDataManager {
       'subject': 'Computer Science',
       'date': '2024-01-15',
       'fileSize': '12MB',
-      'status': 'pending',
+      'status': 'pending', // Paper status: pending, approved, rejected
       'fileType': 'PDF',
       'abstract':
           'This paper explores the fundamentals of machine learning algorithms.',
-      'uploadedBy': 'student',
-      'isPublic': false,
+      'uploadedBy': 'student', // Uploader type: student or admin
+      'isPublic': false, // Visibility to students
+      'hasImage': true, // Whether paper has associated image
     },
-    {
-      'id': '2',
-      'title': 'Quantum Physics Research',
-      'studentId': 'STU2024002',
-      'studentName': 'Jane Smith',
-      'subject': 'Physics',
-      'date': '2024-01-10',
-      'fileSize': '8MB',
-      'status': 'approved',
-      'fileType': 'PDF',
-      'abstract': 'Research on quantum mechanics principles.',
-      'grade': 'A',
-      'feedback': 'Excellent research work',
-      'uploadedBy': 'student',
-      'isPublic': true,
-    },
+    // More sample papers...
   ];
 
-  // 🔥 NOTIFICATIONS FOR ADMIN
+  // NOTIFICATIONS FOR ADMIN - List of notification objects
   List<Map<String, dynamic>> adminNotifications = [
     {
       'id': '1',
       'title': 'New Paper Submission',
       'message': 'John Doe submitted "Introduction to Machine Learning"',
       'time': '2 hours ago',
-      'read': false,
+      'read': false, // Unread notification flag
     },
   ];
 
-  // 🔥 Add new paper
-  void addPaper(Map<String, dynamic> paper) {
+  // Add new paper to the system
+  void addPaper(Map<String, dynamic> paper, {File? imageFile}) {
     allPapers.add(paper);
+    if (imageFile != null) {
+      imageStorage.storeImage(paper['id'], imageFile); // Store associated image
+    }
   }
 
-  // 🔥 Update paper status
+  // Update paper status (approve/reject)
   void updatePaperStatus(
     String paperId,
     String status, {
@@ -559,15 +698,17 @@ class PaperDataManager {
         allPapers[index]['feedback'] = feedback;
       }
       if (status == 'approved') {
-        allPapers[index]['isPublic'] = true;
+        allPapers[index]['isPublic'] = true; // Make approved papers public
       }
     }
   }
 
-  // 🔥 Add notification for admin
+  // Add notification for admin
   void addNotification(String title, String message) {
     adminNotifications.insert(0, {
-      'id': 'NT${DateTime.now().millisecondsSinceEpoch}',
+      // Insert at beginning for chronological order
+      'id':
+          'NT${DateTime.now().millisecondsSinceEpoch}', // Unique ID with timestamp
       'title': title,
       'message': message,
       'time': 'Just now',
@@ -575,22 +716,46 @@ class PaperDataManager {
     });
   }
 
-  // 🔥 Get pending papers
+  // Get papers with pending status
   List<Map<String, dynamic>> getPendingPapers() {
     return allPapers.where((paper) => paper['status'] == 'pending').toList();
   }
 
-  // 🔥 Get approved papers (public)
+  // Get approved papers
   List<Map<String, dynamic>> getApprovedPapers() {
     return allPapers.where((paper) => paper['status'] == 'approved').toList();
   }
 
-  // 🔥 Get all public papers
+  // Get all public papers (visible to students)
   List<Map<String, dynamic>> getPublicPapers() {
     return allPapers.where((paper) => paper['isPublic'] == true).toList();
   }
+
+  // Remove paper completely from system
+  void removePaper(String paperId) {
+    allPapers.removeWhere((paper) => paper['id'] == paperId);
+    imageStorage.removeImage(paperId); // Also remove associated image
+  }
+
+  // Get image for specific paper
+  File? getPaperImage(String paperId) {
+    return imageStorage.getImage(paperId);
+  }
+
+  // Check if paper has associated image
+  bool paperHasImage(String paperId) {
+    return imageStorage.hasImage(paperId);
+  }
 }
 
+// =============================================================================
+// ADMIN HOME PAGE - MAIN ADMINISTRATOR INTERFACE
+// =============================================================================
+// This is the main dashboard for administrators featuring:
+// - Paper review and approval system
+// - Notification management
+// - Paper upload functionality
+// - Analytics and file management
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
 
@@ -599,26 +764,29 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
+  // Access to central data manager (Singleton pattern)
   final PaperDataManager _dataManager = PaperDataManager();
 
-  // 🔥 FILE PICKER STATE FOR ADMIN
-  File? _selectedAdminFile;
-  final ImagePicker _picker = ImagePicker();
+  // FILE PICKER STATE - For admin paper uploads
+  File? _selectedAdminFile; // Selected image file
+  final ImagePicker _picker = ImagePicker(); // Image picker instance
 
-  // 🔥 FUNCTION TO PICK FILE FOR ADMIN
+  // FUNCTION TO PICK FILE FOR ADMIN - Using image_picker package
+  // This demonstrates device hardware access (camera/gallery)
   Future<void> _pickAdminFile(ImageSource source) async {
     final XFile? file = await _picker.pickImage(
-      source: source,
-      imageQuality: 85,
+      source: source, // Can be ImageSource.camera or ImageSource.gallery
+      imageQuality: 85, // Compress image to reduce size
     );
 
     if (file != null) {
       setState(() {
-        _selectedAdminFile = File(file.path);
+        _selectedAdminFile = File(file.path); // Convert to File object
       });
     }
   }
 
+  // Accept paper with grade and feedback
   void _acceptPaper(String paperId, String grade, String feedback) {
     setState(() {
       _dataManager.updatePaperStatus(
@@ -630,6 +798,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     });
   }
 
+  // Reject paper with reason
   void _rejectPaper(String paperId, String reason) {
     setState(() {
       final index = _dataManager.allPapers.indexWhere(
@@ -645,33 +814,42 @@ class _AdminHomePageState extends State<AdminHomePage> {
     });
   }
 
+  // Remove paper completely (even if approved)
+  void _removePaper(String paperId) {
+    setState(() {
+      _dataManager.removePaper(paperId);
+    });
+  }
+
+  // Upload paper as admin (creates public paper)
   void _uploadPaperAsAdmin(Map<String, dynamic> paperData) {
     setState(() {
       final newPaper = {
-        ...paperData,
-        'id': 'ADM${DateTime.now().millisecondsSinceEpoch}',
+        ...paperData, // Spread operator to copy existing data
+        'id': 'ADM${DateTime.now().millisecondsSinceEpoch}', // Unique admin ID
         'uploadedBy': 'Admin Fahdil',
         'uploadDate': DateTime.now().toString().split(' ')[0],
-        'status': 'approved',
-        'isPublic': true,
+        'status': 'approved', // Admin papers auto-approved
+        'isPublic': true, // Admin papers are always public
         'grade': 'A',
         'feedback': 'Uploaded by admin',
+        'hasImage': _selectedAdminFile != null,
       };
 
-      _dataManager.addPaper(newPaper);
+      _dataManager.addPaper(newPaper, imageFile: _selectedAdminFile);
       _dataManager.addNotification(
         'Admin Upload',
         'Admin uploaded "${paperData['title']}"',
       );
     });
 
-    // Reset file selection
+    // Reset file selection after upload
     setState(() {
       _selectedAdminFile = null;
     });
   }
 
-  // 🔥 MARK NOTIFICATION AS READ
+  // Mark notification as read
   void _markNotificationAsRead(String notificationId) {
     setState(() {
       final index = _dataManager.adminNotifications.indexWhere(
@@ -683,7 +861,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     });
   }
 
-  // 🔥 GET UNREAD NOTIFICATIONS COUNT
+  // Get count of unread notifications
   int getUnreadNotificationsCount() {
     return _dataManager.adminNotifications
         .where((n) => n['read'] == false)
@@ -692,6 +870,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get data for display
     final pendingPapers = _dataManager.getPendingPapers();
     final approvedPapers = _dataManager.getApprovedPapers();
     final unreadCount = getUnreadNotificationsCount();
@@ -700,7 +879,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       appBar: AppBar(
         title: const Text('Admin Management'),
         actions: [
-          // 🔥 NOTIFICATION BELL WITH BADGE
+          // NOTIFICATION BELL WITH BADGE - Shows unread count
           Stack(
             children: [
               IconButton(
@@ -708,6 +887,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 onPressed: () => _showNotifications(context),
                 tooltip: 'Notifications',
               ),
+              // Badge showing unread count
               if (unreadCount > 0)
                 Positioned(
                   right: 8,
@@ -735,11 +915,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 ),
             ],
           ),
+          // Upload paper button
           IconButton(
             icon: const Icon(Icons.upload),
             onPressed: () => _showAdminUploadDialog(context),
             tooltip: 'Upload Paper',
           ),
+          // Logout button
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
@@ -757,6 +939,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Admin icon
               const Icon(
                 Icons.admin_panel_settings,
                 size: 150,
@@ -776,11 +959,14 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 ),
               ),
               const SizedBox(height: 30),
+
+              // Feature cards using Wrap for responsive layout
               Wrap(
                 spacing: 0,
                 runSpacing: 0,
                 alignment: WrapAlignment.center,
                 children: [
+                  // Pending Papers card
                   _buildAdminFeatureCard(
                     icon: Icons.pending_actions,
                     title: 'Pending Papers',
@@ -790,6 +976,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showPendingPapersScreen(context);
                     },
                   ),
+                  // Approved Papers card
                   _buildAdminFeatureCard(
                     icon: Icons.approval,
                     title: 'Approved Papers',
@@ -799,6 +986,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showApprovedPapersScreen(context);
                     },
                   ),
+                  // Notifications card
                   _buildAdminFeatureCard(
                     icon: Icons.notifications,
                     title: 'Notifications',
@@ -808,6 +996,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showNotifications(context);
                     },
                   ),
+                  // Upload Paper card
                   _buildAdminFeatureCard(
                     icon: Icons.upload_file,
                     title: 'Upload Paper',
@@ -816,6 +1005,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showAdminUploadDialog(context);
                     },
                   ),
+                  // Analytics card
                   _buildAdminFeatureCard(
                     icon: Icons.analytics,
                     title: 'Analytics',
@@ -824,12 +1014,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showAnalyticsScreen(context);
                     },
                   ),
+                  // File Management card
                   _buildAdminFeatureCard(
-                    icon: Icons.chat,
-                    title: 'Messages',
-                    color: Colors.blue,
+                    icon: Icons.delete,
+                    title: 'Manage Files',
+                    color: Colors.red,
                     onTap: () {
-                      _showAdminMessages(context);
+                      _showFileManagementScreen(context);
                     },
                   ),
                 ],
@@ -841,6 +1032,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Reusable admin feature card widget
   Widget _buildAdminFeatureCard({
     required IconData icon,
     required String title,
@@ -889,6 +1081,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 ),
               ],
             ),
+            // Count badge for items like pending papers
             if (count != null)
               Positioned(
                 top: 10,
@@ -915,12 +1108,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Show pending papers in a modal bottom sheet
   void _showPendingPapersScreen(BuildContext context) {
     final pendingPapers = _dataManager.getPendingPapers();
 
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
+      isScrollControlled: true, // Allow full screen expansion
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -929,7 +1123,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
           builder: (context, setState) {
             return Container(
               padding: const EdgeInsets.all(20),
-              height: MediaQuery.of(context).size.height * 0.9,
+              height:
+                  MediaQuery.of(context).size.height *
+                  0.9, // 90% of screen height
               child: Column(
                 children: [
                   const Text(
@@ -958,7 +1154,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context); // Close modal
                     },
                     child: const Text('Close'),
                   ),
@@ -971,6 +1167,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Build individual pending paper item
   Widget _buildPendingPaperItem(
     Map<String, dynamic> paper,
     BuildContext context,
@@ -999,6 +1196,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Accept button
             IconButton(
               icon: const Icon(Icons.check_circle, color: Colors.green),
               onPressed: () {
@@ -1006,6 +1204,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               tooltip: 'Accept Paper',
             ),
+            // Reject button
             IconButton(
               icon: const Icon(Icons.cancel, color: Colors.red),
               onPressed: () {
@@ -1013,6 +1212,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               tooltip: 'Reject Paper',
             ),
+            // View details button
             IconButton(
               icon: const Icon(Icons.visibility, color: Colors.blue),
               onPressed: () {
@@ -1026,6 +1226,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Show dialog for accepting a paper
   void _showAcceptPaperDialog(
     BuildContext context,
     Map<String, dynamic> paper,
@@ -1049,6 +1250,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     Text('Student ID: ${paper['studentId']}'),
                     const SizedBox(height: 20),
                     const Text('Assign Grade:'),
+                    // Grade dropdown
                     DropdownButtonFormField<String>(
                       value: selectedGrade,
                       items: const [
@@ -1070,6 +1272,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    // Feedback text field
                     TextField(
                       controller: feedbackController,
                       maxLines: 3,
@@ -1115,7 +1318,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     );
 
-                    // 🔥 ADD NOTIFICATION
+                    // Add notification about approval
                     _dataManager.addNotification(
                       'Paper Approved',
                       'You approved "${paper['title']}" with grade $selectedGrade',
@@ -1133,6 +1336,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Show dialog for rejecting a paper
   void _showRejectPaperDialog(
     BuildContext context,
     Map<String, dynamic> paper,
@@ -1187,7 +1391,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                 );
 
-                // 🔥 ADD NOTIFICATION
+                // Add notification about rejection
                 _dataManager.addNotification(
                   'Paper Rejected',
                   'You rejected "${paper['title']}"',
@@ -1203,60 +1407,201 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // View paper details with image preview
   void _viewPaperDetails(BuildContext context, Map<String, dynamic> paper) {
+    final hasImage = _dataManager.paperHasImage(paper['id']);
+    final imageFile = _dataManager.getPaperImage(paper['id']);
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(paper['title']),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Student: ${paper['studentName']}'),
-                Text('Student ID: ${paper['studentId']}'),
-                const SizedBox(height: 10),
-                Text('Subject: ${paper['subject']}'),
-                const SizedBox(height: 10),
-                Text('Submitted: ${paper['date']}'),
-                const SizedBox(height: 10),
-                Text('File Size: ${paper['fileSize']}'),
-                const SizedBox(height: 10),
-                Text('Format: ${paper['fileType']}'),
-                const SizedBox(height: 10),
-                Text('Status: ${paper['status']}'),
-                const SizedBox(height: 20),
-                const Text(
-                  'Abstract:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(paper['abstract'] ?? 'No abstract available'),
-              ],
+        return Dialog(
+          insetPadding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          paper['title'],
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // IMAGE PREVIEW SECTION - Shows uploaded image if exists
+                  if (hasImage && imageFile != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Uploaded Image:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Image.file(
+                            imageFile,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.broken_image,
+                                      size: 60,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text('Unable to load image'),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+
+                  // Paper Details section
+                  const Text(
+                    'Paper Details:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Reusable detail row widget
+                  _buildDetailRow('Student:', paper['studentName']),
+                  _buildDetailRow('Student ID:', paper['studentId']),
+                  _buildDetailRow('Subject:', paper['subject']),
+                  _buildDetailRow('Submitted:', paper['date']),
+                  _buildDetailRow('File Size:', paper['fileSize']),
+                  _buildDetailRow('Format:', paper['fileType']),
+                  _buildDetailRow('Status:', paper['status']),
+
+                  if (paper['grade'] != null)
+                    _buildDetailRow('Grade:', paper['grade']),
+
+                  const SizedBox(height: 20),
+
+                  // Abstract section
+                  const Text(
+                    'Abstract:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(paper['abstract'] ?? 'No abstract available'),
+
+                  // Feedback section if exists
+                  if (paper['feedback'] != null &&
+                      paper['feedback'].isNotEmpty) ...[
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Feedback:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(paper['feedback']),
+                  ],
+
+                  const SizedBox(height: 30),
+
+                  // Action buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Close'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Downloading paper...'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                          child: const Text('Download'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Downloading paper...'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-              child: const Text('Download'),
-            ),
-          ],
         );
       },
     );
   }
 
+  // Reusable widget for displaying paper details in rows
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Show approved papers in modal bottom sheet
   void _showApprovedPapersScreen(BuildContext context) {
     final approvedPapers = _dataManager.getApprovedPapers();
 
@@ -1306,14 +1651,35 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Build individual approved paper item
   Widget _buildApprovedPaperItem(
     Map<String, dynamic> paper,
     BuildContext context,
   ) {
+    final hasImage = _dataManager.paperHasImage(paper['id']);
+
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
-        leading: const Icon(Icons.check_circle, color: Colors.green, size: 40),
+        leading: Stack(
+          children: [
+            const Icon(Icons.picture_as_pdf, color: Colors.red, size: 40),
+            // Image indicator badge
+            if (hasImage)
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.image, size: 12, color: Colors.white),
+                ),
+              ),
+          ],
+        ),
         title: Text(
           paper['title'],
           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -1326,16 +1692,29 @@ class _AdminHomePageState extends State<AdminHomePage> {
             Text('Date: ${paper['date']} • Grade: ${paper['grade'] ?? 'N/A'}'),
             if (paper['feedback'] != null && paper['feedback'].isNotEmpty)
               Text('Feedback: ${paper['feedback']}'),
-            Chip(
-              label: const Text('Public'),
-              backgroundColor: Colors.green[100],
-              labelStyle: const TextStyle(fontSize: 10),
+            // Status chips
+            Wrap(
+              spacing: 4,
+              children: [
+                Chip(
+                  label: const Text('Public'),
+                  backgroundColor: Colors.green[100],
+                  labelStyle: const TextStyle(fontSize: 10),
+                ),
+                if (hasImage)
+                  Chip(
+                    label: const Text('Has Image'),
+                    backgroundColor: Colors.blue[100],
+                    labelStyle: const TextStyle(fontSize: 10),
+                  ),
+              ],
             ),
           ],
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // View button
             IconButton(
               icon: const Icon(Icons.visibility, color: Colors.blue),
               onPressed: () {
@@ -1343,6 +1722,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               tooltip: 'View Details',
             ),
+            // Download button
             IconButton(
               icon: const Icon(Icons.download, color: Colors.green),
               onPressed: () {
@@ -1350,13 +1730,22 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               tooltip: 'Download',
             ),
+            // Delete button
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                _showDeleteApprovedPaperDialog(context, paper);
+              },
+              tooltip: 'Delete',
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _viewApprovedPaperDetails(
+  // Show confirmation dialog for deleting approved paper
+  void _showDeleteApprovedPaperDialog(
     BuildContext context,
     Map<String, dynamic> paper,
   ) {
@@ -1364,68 +1753,47 @@ class _AdminHomePageState extends State<AdminHomePage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(paper['title']),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Student: ${paper['studentName']}'),
-                Text('Student ID: ${paper['studentId']}'),
-                const SizedBox(height: 10),
-                Text('Subject: ${paper['subject']}'),
-                const SizedBox(height: 10),
-                Text('Submitted: ${paper['date']}'),
-                const SizedBox(height: 10),
-                Text('Grade: ${paper['grade'] ?? 'N/A'}'),
-                const SizedBox(height: 10),
-                Text('File Size: ${paper['fileSize']}'),
-                const SizedBox(height: 20),
-                if (paper['feedback'] != null &&
-                    paper['feedback'].isNotEmpty) ...[
-                  const Text(
-                    'Feedback:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(paper['feedback']),
-                  const SizedBox(height: 20),
-                ],
-                const Text(
-                  'Abstract:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(paper['abstract'] ?? 'No abstract available'),
-                const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.green[50],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.public, color: Colors.green, size: 16),
-                      SizedBox(width: 8),
-                      Text(
-                        'This paper is publicly available to all students',
-                        style: TextStyle(fontSize: 12, color: Colors.green),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          title: const Text('Delete Approved Paper'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Are you sure you want to delete "${paper['title']}"?'),
+              const SizedBox(height: 10),
+              const Text(
+                '⚠️ This action cannot be undone. The paper will be permanently removed from the system.',
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                _downloadPaper(paper);
+                _removePaper(paper['id']);
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Paper "${paper['title']}" deleted permanently',
+                    ),
+                    duration: const Duration(seconds: 3),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+
+                // Add notification about deletion
+                _dataManager.addNotification(
+                  'Paper Deleted',
+                  'You deleted "${paper['title']}" from the system',
+                );
+
+                setState(() {});
               },
-              child: const Text('Download'),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Delete Permanently'),
             ),
           ],
         );
@@ -1433,6 +1801,206 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // View detailed approved paper with image preview
+  void _viewApprovedPaperDetails(
+    BuildContext context,
+    Map<String, dynamic> paper,
+  ) {
+    final hasImage = _dataManager.paperHasImage(paper['id']);
+    final imageFile = _dataManager.getPaperImage(paper['id']);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          paper['title'],
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // IMAGE PREVIEW SECTION for approved papers
+                  if (hasImage && imageFile != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Uploaded Image Content:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          height: 350,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(
+                              imageFile,
+                              fit: BoxFit.contain, // Show entire image
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.broken_image,
+                                        size: 60,
+                                        color: Colors.grey,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text('Unable to load image'),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+
+                  // Paper Details
+                  const Text(
+                    'Paper Details:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+
+                  _buildDetailRow('Student:', paper['studentName']),
+                  _buildDetailRow('Student ID:', paper['studentId']),
+                  _buildDetailRow('Subject:', paper['subject']),
+                  _buildDetailRow('Submitted:', paper['date']),
+                  _buildDetailRow(
+                    'Approved on:',
+                    paper['reviewedDate'] ?? 'N/A',
+                  ),
+                  _buildDetailRow('Grade:', paper['grade'] ?? 'N/A'),
+                  _buildDetailRow('File Size:', paper['fileSize']),
+
+                  const SizedBox(height: 20),
+
+                  // Feedback section
+                  if (paper['feedback'] != null &&
+                      paper['feedback'].isNotEmpty) ...[
+                    const Text(
+                      'Feedback:',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(paper['feedback']),
+                    const SizedBox(height: 20),
+                  ],
+
+                  // Abstract section
+                  const Text(
+                    'Abstract:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(paper['abstract'] ?? 'No abstract available'),
+
+                  const SizedBox(height: 20),
+
+                  // Public availability notice
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.green[50],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.public, color: Colors.green, size: 16),
+                        SizedBox(width: 8),
+                        Text(
+                          'This paper is publicly available to all students',
+                          style: TextStyle(fontSize: 12, color: Colors.green),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // Action buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Close'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _downloadPaper(paper);
+                          },
+                          child: const Text('Download'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _showDeleteApprovedPaperDialog(context, paper);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text('Delete'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Simulate paper download
   void _downloadPaper(Map<String, dynamic> paper) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -1442,6 +2010,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Show notifications in modal bottom sheet
   void _showNotifications(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -1477,9 +2046,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         },
                       ),
               ),
+              // Mark all as read button
               ElevatedButton(
                 onPressed: () {
-                  // Mark all as read
+                  // Mark all notifications as read
                   for (var notification in _dataManager.adminNotifications) {
                     notification['read'] = true;
                   }
@@ -1495,12 +2065,14 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Build individual notification item
   Widget _buildNotificationItem(
     Map<String, dynamic> notification,
     BuildContext context,
   ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
+      // Different background for unread notifications
       color: notification['read'] ? Colors.white : Colors.blue[50],
       child: ListTile(
         leading: notification['read']
@@ -1525,6 +2097,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
             ),
           ],
         ),
+        // Mark as read button for unread notifications
         trailing: notification['read']
             ? null
             : IconButton(
@@ -1541,6 +2114,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Show admin upload dialog
   void _showAdminUploadDialog(BuildContext context) {
     final titleController = TextEditingController();
     final subjectController = TextEditingController();
@@ -1560,7 +2134,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
             return SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                  bottom: MediaQuery.of(
+                    context,
+                  ).viewInsets.bottom, // Adjust for keyboard
                   left: 24,
                   right: 24,
                   top: 24,
@@ -1577,6 +2153,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // File type selection
                     const Text('Select file type:'),
                     Wrap(
                       spacing: 8,
@@ -1593,6 +2171,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       }).toList(),
                     ),
                     const SizedBox(height: 16),
+
+                    // Subject selection
                     const Text('Select subject:'),
                     DropdownButtonFormField<String>(
                       value: selectedSubject,
@@ -1601,26 +2181,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                           value: 'Computer Science',
                           child: Text('Computer Science'),
                         ),
-                        DropdownMenuItem(
-                          value: 'Mathematics',
-                          child: Text('Mathematics'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Physics',
-                          child: Text('Physics'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Chemistry',
-                          child: Text('Chemistry'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Economics',
-                          child: Text('Economics'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'General',
-                          child: Text('General'),
-                        ),
+                        // More subjects...
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -1633,6 +2194,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // Title input
                     TextField(
                       controller: titleController,
                       decoration: const InputDecoration(
@@ -1642,6 +2205,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // Description input
                     TextField(
                       controller: descriptionController,
                       maxLines: 3,
@@ -1653,7 +2218,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     ),
                     const SizedBox(height: 16),
 
-                    // 🔥 FILE PICKER SECTION
+                    // FILE PICKER SECTION - Image preview and selection
                     Container(
                       width: double.infinity,
                       height: 200,
@@ -1673,6 +2238,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                   ),
                                   SizedBox(height: 8),
                                   Text('No file selected'),
+                                  Text(
+                                    'Select an image to upload',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                 ],
                               ),
                             )
@@ -1698,7 +2270,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     ),
                     const SizedBox(height: 12),
 
-                    // 🔥 CAMERA/GALLERY BUTTONS
+                    // CAMERA/GALLERY BUTTONS - Device hardware access
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -1716,6 +2288,8 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     ),
 
                     const SizedBox(height: 24),
+
+                    // Action buttons
                     Row(
                       children: [
                         Expanded(
@@ -1728,6 +2302,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
+                              // Form validation
                               if (titleController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -1791,6 +2366,126 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Show file management screen
+  void _showFileManagementScreen(BuildContext context) {
+    final approvedPapers = _dataManager.getApprovedPapers();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: MediaQuery.of(context).size.height * 0.9,
+          child: Column(
+            children: [
+              const Text(
+                'File Management',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Manage and delete approved papers',
+                style: TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: approvedPapers.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No approved papers to manage',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: approvedPapers.length,
+                        itemBuilder: (context, index) {
+                          final paper = approvedPapers[index];
+                          return _buildFileManagementItem(paper, context);
+                        },
+                      ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Build file management item
+  Widget _buildFileManagementItem(
+    Map<String, dynamic> paper,
+    BuildContext context,
+  ) {
+    final hasImage = _dataManager.paperHasImage(paper['id']);
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      child: ListTile(
+        leading: hasImage
+            ? const Icon(Icons.image, color: Colors.blue, size: 40)
+            : const Icon(Icons.picture_as_pdf, color: Colors.red, size: 40),
+        title: Text(
+          paper['title'],
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('By: ${paper['studentName']}'),
+            Text('Subject: ${paper['subject']}'),
+            Text('Date: ${paper['date']} • Size: ${paper['fileSize']}'),
+            Wrap(
+              spacing: 4,
+              children: [
+                Chip(
+                  label: Text(paper['status']),
+                  backgroundColor: Colors.green[100],
+                  labelStyle: const TextStyle(fontSize: 10),
+                ),
+                if (hasImage)
+                  Chip(
+                    label: const Text('Has Image'),
+                    backgroundColor: Colors.blue[100],
+                    labelStyle: const TextStyle(fontSize: 10),
+                  ),
+              ],
+            ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.visibility, color: Colors.blue),
+              onPressed: () {
+                _viewApprovedPaperDetails(context, paper);
+              },
+              tooltip: 'View',
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                _showDeleteApprovedPaperDialog(context, paper);
+              },
+              tooltip: 'Delete',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Show analytics dashboard
   void _showAnalyticsScreen(BuildContext context) {
     final pendingPapers = _dataManager.getPendingPapers();
     final approvedPapers = _dataManager.getApprovedPapers();
@@ -1819,12 +2514,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 ),
                 _buildAnalyticsItem('Public Papers', '${publicPapers.length}'),
                 _buildAnalyticsItem(
-                  'Admin Notifications',
-                  '${_dataManager.adminNotifications.length}',
+                  'Papers with Images',
+                  '${_dataManager.allPapers.where((p) => p['hasImage'] == true).length}',
                 ),
                 _buildAnalyticsItem(
-                  'Unread Notifications',
-                  '${getUnreadNotificationsCount()}',
+                  'Admin Notifications',
+                  '${_dataManager.adminNotifications.length}',
                 ),
                 const SizedBox(height: 20),
                 Container(
@@ -1853,6 +2548,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
+  // Build analytics item row
   Widget _buildAnalyticsItem(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1868,90 +2564,16 @@ class _AdminHomePageState extends State<AdminHomePage> {
       ),
     );
   }
-
-  void _showAdminMessages(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: Column(
-            children: [
-              const Text(
-                'Admin Messages',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  children: const [
-                    MessageBubble(
-                      text: 'Hello Admin, when will my paper be reviewed?',
-                      isMe: false,
-                      time: '10:30 AM',
-                    ),
-                    MessageBubble(
-                      text:
-                          'Your paper is in the queue, will be reviewed within 24 hours.',
-                      isMe: true,
-                      time: '10:35 AM',
-                    ),
-                    MessageBubble(
-                      text: 'Thank you!',
-                      isMe: false,
-                      time: '10:36 AM',
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 16),
-                decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: Colors.grey.shade300)),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Type your reply...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      child: IconButton(
-                        icon: const Icon(Icons.send, color: Colors.white),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Message sent successfully!'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 }
 
+// =============================================================================
+// STUDENT HOME PAGE - MAIN STUDENT INTERFACE
+// =============================================================================
+// This is the main dashboard for students featuring:
+// - Paper submission system
+// - Public paper browsing
+// - AI exercise generator
+// - Profile management
 class StudentHomePage extends StatefulWidget {
   const StudentHomePage({super.key});
 
@@ -1960,8 +2582,13 @@ class StudentHomePage extends StatefulWidget {
 }
 
 class _StudentHomePageState extends State<StudentHomePage> {
+  // ValueNotifier for reactive bottom navigation
   final ValueNotifier<int> _selectedIndex = ValueNotifier(0);
+
+  // Selected subjects for AI exercises
   final List<String> _selectedSubjects = ['Computer Science', 'Physics'];
+
+  // Sample exercises data
   final List<Map<String, dynamic>> _exercises = [
     {
       'id': '1',
@@ -1970,23 +2597,17 @@ class _StudentHomePageState extends State<StudentHomePage> {
       'date': '2 hours ago',
       'completed': false,
     },
-    {
-      'id': '2',
-      'title': 'Quantum Mechanics Exercises',
-      'subject': 'Physics',
-      'date': '1 day ago',
-      'completed': true,
-    },
+    // More exercises...
   ];
 
-  // 🔥 FILE PICKER STATE FOR STUDENT
+  // FILE PICKER STATE FOR STUDENT
   File? _selectedStudentFile;
   final ImagePicker _studentPicker = ImagePicker();
 
-  // 🔥 DATA MANAGER
+  // DATA MANAGER ACCESS
   final PaperDataManager _dataManager = PaperDataManager();
 
-  // 🔥 FUNCTION TO PICK FILE FOR STUDENT
+  // FUNCTION TO PICK FILE FOR STUDENT
   Future<void> _pickStudentFile(ImageSource source) async {
     final XFile? file = await _studentPicker.pickImage(
       source: source,
@@ -2008,7 +2629,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // 🔥 GET USER'S PENDING SUBMISSIONS
+    // Get user-specific data
     final userPendingSubmissions = _dataManager.allPapers
         .where(
           (paper) =>
@@ -2016,7 +2637,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
         )
         .toList();
 
-    // 🔥 GET PUBLIC PAPERS (APPROVED PAPERS)
     final publicPapers = _dataManager.getPublicPapers();
 
     return Scaffold(
@@ -2027,6 +2647,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
         elevation: 0,
         title: Row(
           children: [
+            // User avatar
             const CircleAvatar(
               backgroundColor: Colors.blue,
               child: Icon(Icons.person, color: Colors.white, size: 24),
@@ -2059,6 +2680,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           ],
         ),
         actions: [
+          // Notifications with badge
           IconButton(
             icon: Stack(
               children: [
@@ -2067,7 +2689,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   color: Colors.grey,
                   size: 22,
                 ),
-                // 🔥 SHOW BADGE IF USER HAS PENDING PAPERS
+                // Show badge if user has pending papers
                 if (userPendingSubmissions.isNotEmpty)
                   Positioned(
                     right: 0,
@@ -2098,6 +2720,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
               _showNotifications(context);
             },
           ),
+          // Messages button
           IconButton(
             icon: const Icon(
               Icons.chat_bubble_outline,
@@ -2106,6 +2729,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
             ),
             onPressed: _openMessages,
           ),
+          // More options menu
           PopupMenuButton(
             icon: const Icon(Icons.more_vert, color: Colors.grey),
             itemBuilder: (context) => const [
@@ -2131,12 +2755,14 @@ class _StudentHomePageState extends State<StudentHomePage> {
           ),
         ],
       ),
+      // Reactive body based on selected tab
       body: ValueListenableBuilder<int>(
         valueListenable: _selectedIndex,
         builder: (context, index, child) {
           return _buildBody(index, userPendingSubmissions, publicPapers);
         },
       ),
+      // Floating action button for paper upload
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showUploadDialog,
         icon: const Icon(Icons.upload, size: 20),
@@ -2144,6 +2770,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
+      // Bottom navigation
       bottomNavigationBar: ValueListenableBuilder<int>(
         valueListenable: _selectedIndex,
         builder: (context, index, child) {
@@ -2179,6 +2806,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Switch between different body sections based on selected index
   Widget _buildBody(
     int index,
     List<Map<String, dynamic>> pendingSubmissions,
@@ -2198,6 +2826,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     }
   }
 
+  // Dashboard section
   Widget _buildDashboard(
     List<Map<String, dynamic>> pendingSubmissions,
     List<Map<String, dynamic>> publicPapers,
@@ -2221,6 +2850,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Quick stats section
   Widget _buildQuickStats(
     List<Map<String, dynamic>> pendingSubmissions,
     List<Map<String, dynamic>> publicPapers,
@@ -2272,6 +2902,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Individual stat item widget
   Widget _buildStatItem(
     IconData icon,
     String value,
@@ -2295,6 +2926,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Pending submissions section
   Widget _buildPendingSubmissions(
     List<Map<String, dynamic>> pendingSubmissions,
   ) {
@@ -2313,6 +2945,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Public papers preview section
   Widget _buildPublicPapersPreview(List<Map<String, dynamic>> publicPapers) {
     final recentPapers = publicPapers.take(3).toList();
 
@@ -2327,7 +2960,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             TextButton(
-              onPressed: () => _selectedIndex.value = 1,
+              onPressed: () =>
+                  _selectedIndex.value = 1, // Navigate to public papers tab
               child: const Text('View All'),
             ),
           ],
@@ -2346,7 +2980,10 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Paper card widget
   Widget _buildPaperCard(Map<String, dynamic> paper, {bool isPending = false}) {
+    final hasImage = _dataManager.paperHasImage(paper['id']);
+
     return GestureDetector(
       onTap: () {
         _showPaperDetails(paper);
@@ -2355,18 +2992,40 @@ class _StudentHomePageState extends State<StudentHomePage> {
         margin: const EdgeInsets.only(bottom: 12),
         child: ListTile(
           contentPadding: const EdgeInsets.all(16),
-          leading: Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.blue[50],
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              _getSubjectIcon(paper['subject']),
-              color: Colors.blue,
-              size: 24,
-            ),
+          leading: Stack(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  _getSubjectIcon(paper['subject']),
+                  color: Colors.blue,
+                  size: 24,
+                ),
+              ),
+              // Image indicator
+              if (hasImage)
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.image,
+                      size: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+            ],
           ),
           title: Text(
             paper['title'],
@@ -2414,9 +3073,10 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // AI exercise card
   Widget _buildAIExerciseCard() {
     return GestureDetector(
-      onTap: () => _selectedIndex.value = 2,
+      onTap: () => _selectedIndex.value = 2, // Navigate to AI exercises tab
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
@@ -2467,12 +3127,14 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Full public papers list
   Widget _buildPublicPapersList(List<Map<String, dynamic>> publicPapers) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: publicPapers.length,
       itemBuilder: (context, index) {
         final paper = publicPapers[index];
+        final hasImage = _dataManager.paperHasImage(paper['id']);
 
         return GestureDetector(
           onTap: () {
@@ -2482,10 +3144,28 @@ class _StudentHomePageState extends State<StudentHomePage> {
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
               contentPadding: const EdgeInsets.all(16),
-              leading: const Icon(
-                Icons.picture_as_pdf,
-                color: Colors.red,
-                size: 35,
+              leading: Stack(
+                children: [
+                  const Icon(Icons.picture_as_pdf, color: Colors.red, size: 35),
+                  // Image indicator
+                  if (hasImage)
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.image,
+                          size: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
               ),
               title: Text(
                 paper['title'],
@@ -2498,6 +3178,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                 children: [
                   Text('Subject: ${paper['subject']}'),
                   const SizedBox(height: 4),
+                  // Status chips
                   Wrap(
                     spacing: 8,
                     children: [
@@ -2512,10 +3193,16 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         backgroundColor: Colors.blue[50],
                         labelStyle: const TextStyle(fontSize: 12),
                       ),
+                      if (hasImage)
+                        Chip(
+                          label: const Text('Has Image'),
+                          backgroundColor: Colors.purple[50],
+                          labelStyle: const TextStyle(fontSize: 12),
+                        ),
                       if (paper['uploadedBy'] == 'admin')
                         Chip(
                           label: const Text('Admin'),
-                          backgroundColor: Colors.purple[50],
+                          backgroundColor: Colors.orange[50],
                           labelStyle: const TextStyle(fontSize: 12),
                         ),
                     ],
@@ -2548,6 +3235,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // AI exercises section
   Widget _buildAIExercises() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -2572,6 +3260,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Subject selection for AI exercises
   Widget _buildSubjectSelection() {
     final subjects = [
       'Computer Science',
@@ -2638,6 +3327,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Generated exercises list
   Widget _buildGeneratedExercises() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2697,6 +3387,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Profile section
   Widget _buildProfile(List<Map<String, dynamic>> pendingSubmissions) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -2719,7 +3410,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           ),
           const SizedBox(height: 32),
 
-          // Pending submissions status
+          // Pending submissions status card
           if (pendingSubmissions.isNotEmpty) ...[
             Card(
               color: Colors.orange[50],
@@ -2753,6 +3444,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
             const SizedBox(height: 20),
           ],
 
+          // Profile menu items
           _buildProfileMenuItem(Icons.history, 'My Submission History', () {
             _showSubmissionHistory(context);
           }),
@@ -2777,6 +3469,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Profile menu item widget
   Widget _buildProfileMenuItem(
     IconData icon,
     String text,
@@ -2797,6 +3490,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Show upload dialog for students
   void _showUploadDialog() {
     final titleController = TextEditingController();
     final subjectController = TextEditingController();
@@ -2833,6 +3527,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // File type selection
                     const Text('Select file type:'),
                     Wrap(
                       spacing: 8,
@@ -2849,6 +3545,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       }).toList(),
                     ),
                     const SizedBox(height: 16),
+
+                    // Subject selection
                     const Text('Select subject:'),
                     DropdownButtonFormField<String>(
                       initialValue: selectedSubject,
@@ -2857,18 +3555,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                           value: 'Computer Science',
                           child: Text('Computer Science'),
                         ),
-                        DropdownMenuItem(
-                          value: 'Mathematics',
-                          child: Text('Mathematics'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Physics',
-                          child: Text('Physics'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Economics',
-                          child: Text('Economics'),
-                        ),
+                        // More subjects...
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -2881,6 +3568,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // Title input
                     TextField(
                       controller: titleController,
                       decoration: const InputDecoration(
@@ -2889,6 +3578,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
+
+                    // Description input
                     TextField(
                       controller: descriptionController,
                       maxLines: 3,
@@ -2899,7 +3590,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ),
                     const SizedBox(height: 16),
 
-                    // 🔥 FILE PICKER SECTION
+                    // FILE PICKER SECTION for students
                     Container(
                       width: double.infinity,
                       height: 200,
@@ -2919,6 +3610,13 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                   ),
                                   SizedBox(height: 8),
                                   Text('No file selected'),
+                                  Text(
+                                    'Select an image to upload',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                 ],
                               ),
                             )
@@ -2944,7 +3642,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ),
                     const SizedBox(height: 12),
 
-                    // 🔥 CAMERA/GALLERY BUTTONS
+                    // CAMERA/GALLERY BUTTONS for students
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -2963,6 +3661,8 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ),
 
                     const SizedBox(height: 24),
+
+                    // Action buttons
                     Row(
                       children: [
                         Expanded(
@@ -2975,6 +3675,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
+                              // Form validation
                               if (titleController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -2995,7 +3696,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                 return;
                               }
 
-                              // 🔥 CREATE NEW PAPER WITH PENDING STATUS
+                              // CREATE NEW PAPER WITH PENDING STATUS
                               final newPaper = {
                                 'id':
                                     'STU${DateTime.now().millisecondsSinceEpoch}',
@@ -3015,12 +3716,16 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                 'status': 'pending',
                                 'uploadedBy': 'student',
                                 'isPublic': false,
+                                'hasImage': true,
                               };
 
-                              // 🔥 ADD TO GLOBAL DATA MANAGER
-                              _dataManager.addPaper(newPaper);
+                              // ADD TO GLOBAL DATA MANAGER WITH IMAGE
+                              _dataManager.addPaper(
+                                newPaper,
+                                imageFile: _selectedStudentFile,
+                              );
 
-                              // 🔥 ADD NOTIFICATION FOR ADMIN
+                              // ADD NOTIFICATION FOR ADMIN
                               _dataManager.addNotification(
                                 'New Paper Submission',
                                 'Student submitted "${titleController.text}" for review',
@@ -3059,6 +3764,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Open messages to admin
   void _openMessages() {
     showModalBottomSheet(
       context: context,
@@ -3099,6 +3805,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   ],
                 ),
               ),
+              // Message input
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 decoration: BoxDecoration(
@@ -3141,6 +3848,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Show notifications for student
   void _showNotifications(BuildContext context) {
     final userPendingSubmissions = _dataManager.allPapers
         .where(
@@ -3190,6 +3898,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         }).toList(),
                       ),
               ),
+              // New submission button
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -3204,82 +3913,284 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Show paper details with image preview
   void _showPaperDetails(Map<String, dynamic> paper) {
+    final hasImage = _dataManager.paperHasImage(paper['id']);
+    final imageFile = _dataManager.getPaperImage(paper['id']);
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(paper['title']),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('By: ${paper['studentName']}'),
-                Text('Student ID: ${paper['studentId']}'),
-                const SizedBox(height: 10),
-                Text('Subject: ${paper['subject']}'),
-                const SizedBox(height: 10),
-                Text('Submitted: ${paper['date']}'),
-                const SizedBox(height: 10),
-                Text('Status: ${paper['status']}'),
-                const SizedBox(height: 10),
-                if (paper['grade'] != null) Text('Grade: ${paper['grade']}'),
-                if (paper['feedback'] != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        return Dialog(
+          insetPadding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SizedBox(height: 10),
-                      const Text('Feedback:'),
-                      Text(paper['feedback']),
+                      Expanded(
+                        child: Text(
+                          paper['title'],
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                     ],
                   ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Abstract:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text(paper['abstract'] ?? 'No abstract available'),
-                const SizedBox(height: 20),
-                if (paper['isPublic'] == true)
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.green[50],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Row(
+
+                  const SizedBox(height: 20),
+
+                  // IMAGE PREVIEW SECTION - Students can see approved paper images
+                  if (hasImage &&
+                      imageFile != null &&
+                      paper['status'] == 'approved')
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.public, color: Colors.green, size: 16),
-                        SizedBox(width: 8),
-                        Text(
-                          'This paper is publicly available',
-                          style: TextStyle(fontSize: 12, color: Colors.green),
+                        const Text(
+                          'Uploaded Image Content:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                        const SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          height: 350,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(
+                              imageFile,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.broken_image,
+                                        size: 60,
+                                        color: Colors.grey,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text('Unable to load image'),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     ),
+
+                  // FOR PENDING PAPERS, SHOW UPLOADED IMAGE (ONLY OWNER CAN SEE)
+                  if (hasImage &&
+                      imageFile != null &&
+                      paper['status'] == 'pending' &&
+                      paper['studentId'] == 'STU001')
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Your Uploaded Image:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          height: 300,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.orange),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(
+                              imageFile,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.broken_image,
+                                        size: 60,
+                                        color: Colors.grey,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text('Unable to load image'),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'This image is only visible to you until the paper is approved',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.orange,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+
+                  // Paper Details
+                  const Text(
+                    'Paper Details:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-              ],
+                  const SizedBox(height: 10),
+
+                  _buildDetailRow('By:', paper['studentName']),
+                  _buildDetailRow('Student ID:', paper['studentId']),
+                  _buildDetailRow('Subject:', paper['subject']),
+                  _buildDetailRow('Submitted:', paper['date']),
+                  _buildDetailRow('Status:', paper['status']),
+                  _buildDetailRow('File Size:', paper['fileSize']),
+
+                  if (paper['grade'] != null)
+                    _buildDetailRow('Grade:', paper['grade']),
+
+                  if (paper['feedback'] != null)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Feedback:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(paper['feedback']),
+                      ],
+                    ),
+
+                  const SizedBox(height: 20),
+
+                  // Abstract section
+                  const Text(
+                    'Abstract:',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(paper['abstract'] ?? 'No abstract available'),
+
+                  const SizedBox(height: 20),
+
+                  // Public availability notice
+                  if (paper['isPublic'] == true)
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.green[50],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.public, color: Colors.green, size: 16),
+                          SizedBox(width: 8),
+                          Text(
+                            'This paper is publicly available',
+                            style: TextStyle(fontSize: 12, color: Colors.green),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  const SizedBox(height: 30),
+
+                  // Action buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Close'),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _downloadPaper(paper);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Download'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                _downloadPaper(paper);
-                Navigator.pop(context);
-              },
-              child: const Text('Download'),
-            ),
-          ],
         );
       },
     );
   }
 
+  // Reusable detail row widget for student
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Simulate paper download
   void _downloadPaper(Map<String, dynamic> paper) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -3289,6 +4200,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Generate AI exercises
   void _generateExercises() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -3318,6 +4230,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     });
   }
 
+  // Show exercise details
   void _showExerciseDetails(Map<String, dynamic> exercise) {
     showDialog(
       context: context,
@@ -3358,6 +4271,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Mark exercise as completed
   void _markExerciseCompleted(String id) {
     setState(() {
       final index = _exercises.indexWhere((e) => e['id'] == id);
@@ -3374,6 +4288,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Download exercise
   void _downloadExercise(Map<String, dynamic> exercise) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -3383,6 +4298,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Show submission history
   void _showSubmissionHistory(BuildContext context) {
     final userPapers = _dataManager.allPapers
         .where((paper) => paper['studentId'] == 'STU001')
@@ -3436,6 +4352,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Show help and support
   void _showHelpSupport(BuildContext context) {
     showDialog(
       context: context,
@@ -3478,6 +4395,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
+  // Get icon for subject
   IconData _getSubjectIcon(String subject) {
     switch (subject) {
       case 'Computer Science':
@@ -3492,6 +4410,13 @@ class _StudentHomePageState extends State<StudentHomePage> {
   }
 }
 
+// =============================================================================
+// MESSAGE BUBBLE WIDGET - REUSABLE CHAT COMPONENT
+// =============================================================================
+// This widget represents individual chat messages with:
+// - Different styling for sent vs received messages
+// - Timestamp display
+// - Avatar placement based on message origin
 class MessageBubble extends StatelessWidget {
   final String text;
   final bool isMe;
