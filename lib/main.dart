@@ -1,31 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:io'; // For file operations
-import 'package:image_picker/image_picker.dart'; // For camera and gallery access
+import 'dart:io'; // 🔥 ADD THIS
+import 'package:image_picker/image_picker.dart'; // 🔥 ADD THIS
 
 void main() {
-  // Initialize Flutter binding before any UI rendering
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Configure system UI overlay (status bar) appearance
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
     ),
   );
-
-  // Start the application with the main widget
   runApp(const PaperLinkApp());
 }
 
-// =============================================================================
-// MAIN APPLICATION WIDGET - ROOT OF THE APP
-// =============================================================================
-// This is the main application class that sets up the MaterialApp with:
-// - Global theme configuration
-// - App-wide navigation structure
-// - Overall app styling and behavior
 class PaperLinkApp extends StatelessWidget {
   const PaperLinkApp({super.key});
 
@@ -34,29 +22,20 @@ class PaperLinkApp extends StatelessWidget {
     return MaterialApp(
       title: 'PaperLink',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-        ), // Color scheme based on blue
-        useMaterial3: true, // Use Material Design 3
-        fontFamily: 'Roboto', // Global font family
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+        fontFamily: 'Roboto',
         appBarTheme: const AppBarTheme(
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          elevation: 0, // No shadow for app bar
+          elevation: 0,
         ),
       ),
-      debugShowCheckedModeBanner: false, // Remove debug banner in release mode
-      home: const WelcomePage(), // Initial screen
+      debugShowCheckedModeBanner: false,
+      home: const WelcomePage(),
     );
   }
 }
 
-// =============================================================================
-// WELCOME PAGE - LANDING SCREEN WITH AUTHENTICATION OPTIONS
-// =============================================================================
-// This is the first screen users see, featuring:
-// - Gradient background for visual appeal
-// - Two main navigation options: Admin Login and Student Access
-// - Smooth transition animations between screens
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
@@ -68,10 +47,7 @@ class WelcomePage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF1565C0),
-              Color(0xFF4A148C),
-            ], // Blue to purple gradient
+            colors: [Color(0xFF1565C0), Color(0xFF4A148C)],
           ),
         ),
         child: Center(
@@ -80,11 +56,8 @@ class WelcomePage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // App icon
                 const Icon(Icons.school, size: 100, color: Colors.white),
                 const SizedBox(height: 20),
-
-                // App title with shadow effect
                 const Text(
                   'PaperLink',
                   style: TextStyle(
@@ -105,8 +78,6 @@ class WelcomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, color: Colors.white70),
                 ),
                 const SizedBox(height: 50),
-
-                // Admin Login Button - Constrained to maximum width
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 300),
                   child: ElevatedButton(
@@ -138,8 +109,6 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Student Access Button
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 300),
                   child: ElevatedButton(
@@ -171,8 +140,6 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 40),
-
-                // Footer text
                 const Text(
                   'Educational portal',
                   style: TextStyle(fontSize: 14, color: Colors.white70),
@@ -189,7 +156,6 @@ class WelcomePage extends StatelessWidget {
     );
   }
 
-  // Navigation method for Admin Login with fade transition
   void _navigateToAdmin(BuildContext context) {
     Navigator.push(
       context,
@@ -203,7 +169,6 @@ class WelcomePage extends StatelessWidget {
     );
   }
 
-  // Navigation method for Student Access with fade transition and replacement
   void _navigateToStudent(BuildContext context) {
     Navigator.pushReplacement(
       context,
@@ -218,14 +183,6 @@ class WelcomePage extends StatelessWidget {
   }
 }
 
-// =============================================================================
-// ADMIN LOGIN PAGE - AUTHENTICATION FOR ADMINISTRATORS
-// =============================================================================
-// Stateful widget that handles admin authentication with:
-// - Username and password input
-// - Password visibility toggle
-// - Form validation
-// - Forgot password functionality
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({super.key});
 
@@ -234,22 +191,14 @@ class AdminLoginPage extends StatefulWidget {
 }
 
 class _AdminLoginPageState extends State<AdminLoginPage> {
-  // Text editing controllers for form fields
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  // ValueNotifier for reactive UI updates (password visibility)
   final ValueNotifier<bool> _isPasswordVisible = ValueNotifier(false);
-
-  // ValueNotifier for loading state during login
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
-
-  // Focus node for managing keyboard focus
   final FocusNode _passwordFocusNode = FocusNode();
 
   @override
   void dispose() {
-    // Clean up all controllers and listeners to prevent memory leaks
     _usernameController.dispose();
     _passwordController.dispose();
     _isPasswordVisible.dispose();
@@ -264,7 +213,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context), // Back navigation
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Text('Admin Login'),
       ),
@@ -274,8 +223,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-
-            // Admin icon
             const Center(
               child: Icon(
                 Icons.admin_panel_settings,
@@ -284,8 +231,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Page title
             const Center(
               child: Text(
                 'Admin Portal',
@@ -293,8 +238,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 10),
-
-            // Subtitle
             const Center(
               child: Text(
                 'Password-based secure access',
@@ -302,13 +245,10 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 40),
-
-            // Username field
             TextFormField(
               controller: _usernameController,
-              textInputAction: TextInputAction.next, // Keyboard next button
-              onFieldSubmitted: (_) =>
-                  _passwordFocusNode.requestFocus(), // Move to password field
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
               decoration: InputDecoration(
                 labelText: 'Admin Name',
                 prefixIcon: const Icon(Icons.person),
@@ -318,17 +258,15 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Password field with visibility toggle using ValueListenableBuilder
             ValueListenableBuilder<bool>(
               valueListenable: _isPasswordVisible,
               builder: (context, isVisible, child) {
                 return TextFormField(
                   controller: _passwordController,
                   focusNode: _passwordFocusNode,
-                  obscureText: !isVisible, // Toggle password visibility
-                  textInputAction: TextInputAction.done, // Keyboard done button
-                  onFieldSubmitted: (_) => _loginAsAdmin(), // Submit on done
+                  obscureText: !isVisible,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _loginAsAdmin(),
                   decoration: InputDecoration(
                     labelText: 'Password',
                     prefixIcon: const Icon(Icons.lock),
@@ -337,8 +275,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                         isVisible ? Icons.visibility : Icons.visibility_off,
                       ),
                       onPressed: () {
-                        _isPasswordVisible.value =
-                            !_isPasswordVisible.value; // Toggle state
+                        _isPasswordVisible.value = !_isPasswordVisible.value;
                       },
                     ),
                     border: OutlineInputBorder(
@@ -349,8 +286,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               },
             ),
             const SizedBox(height: 10),
-
-            // Forgot password link
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -361,8 +296,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               ),
             ),
             const SizedBox(height: 30),
-
-            // Login button with loading state
             ValueListenableBuilder<bool>(
               valueListenable: _isLoading,
               builder: (context, isLoading, child) {
@@ -370,9 +303,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: isLoading
-                        ? null
-                        : _loginAsAdmin, // Disable when loading
+                    onPressed: isLoading ? null : _loginAsAdmin,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
@@ -401,12 +332,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               },
             ),
             const SizedBox(height: 20),
-
-            // Divider for visual separation
             const Divider(),
             const SizedBox(height: 20),
-
-            // Switch to student access
             Center(
               child: TextButton(
                 onPressed: () {
@@ -416,7 +343,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       pageBuilder: (_, __, ___) => const StudentHomePage(),
                       transitionsBuilder: (_, animation, __, child) {
                         return SlideTransition(
-                          // Slide animation
                           position: Tween<Offset>(
                             begin: const Offset(1, 0),
                             end: Offset.zero,
@@ -437,12 +363,10 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     );
   }
 
-  // Login validation and navigation
   Future<void> _loginAsAdmin() async {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
-    // Form validation
     if (username.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -453,7 +377,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       return;
     }
 
-    // Hardcoded credential check (in real app, use secure authentication)
+    // Check for correct credentials
     if (username != 'Fahdil' || password != 'Fahdil@1') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -464,14 +388,12 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       return;
     }
 
-    _isLoading.value = true; // Show loading indicator
+    _isLoading.value = true;
 
-    // Simulate API call delay
     await Future.delayed(const Duration(milliseconds: 500));
 
-    _isLoading.value = false; // Hide loading indicator
+    _isLoading.value = false;
 
-    // Navigate to admin home page on successful login
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -484,14 +406,13 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     );
   }
 
-  // Show forgot password dialog
   void _showForgotPasswordDialog(BuildContext context) {
     final emailController = TextEditingController();
     final focusNode = FocusNode();
 
     showDialog(
       context: context,
-      barrierDismissible: true, // Allow closing by tapping outside
+      barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
           title: const Text('Reset Password'),
@@ -506,7 +427,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               TextFormField(
                 controller: emailController,
                 focusNode: focusNode,
-                autofocus: true, // Auto-focus on the field
+                autofocus: true,
                 decoration: InputDecoration(
                   labelText: 'Admin Email',
                   border: OutlineInputBorder(
@@ -521,7 +442,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context), // Close dialog
+              onPressed: () => Navigator.pop(context),
               child: const Text('Cancel'),
             ),
             ElevatedButton(
@@ -534,13 +455,11 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
         );
       },
     ).then((_) {
-      // Clean up controllers after dialog closes
       emailController.dispose();
       focusNode.dispose();
     });
   }
 
-  // Process password reset request
   void _processPasswordReset(BuildContext context, String email) {
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -552,7 +471,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       return;
     }
 
-    Navigator.pop(context); // Close dialog
+    Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Password reset instructions sent to your email'),
@@ -562,86 +481,62 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   }
 }
 
-// =============================================================================
-// IMAGE STORAGE MANAGER - SINGLETON FOR IMAGE MANAGEMENT
-// =============================================================================
-// OOP CONCEPT: Singleton Pattern
-// This class manages image storage in memory using:
-// - Singleton design pattern (single instance throughout app)
-// - In-memory storage using Maps
-// - Image retrieval by paper ID
-// - File path management
+// 🔥 STORAGE MANAGER FOR IMAGES
 class ImageStorageManager {
-  // Singleton instance (private constructor)
   static final ImageStorageManager _instance = ImageStorageManager._internal();
 
-  // Factory constructor to return the singleton instance
   factory ImageStorageManager() {
     return _instance;
   }
 
-  // Private constructor
   ImageStorageManager._internal();
 
-  // In-memory storage using Maps
-  Map<String, File> _imageStorage = {}; // Stores File objects
-  Map<String, String> _imagePaths = {}; // Stores file paths
+  // Store images with their paper IDs
+  Map<String, File> _imageStorage = {};
+  Map<String, String> _imagePaths = {};
 
-  // Store image with associated paper ID
+  // Store image
   void storeImage(String paperId, File imageFile) {
     _imageStorage[paperId] = imageFile;
     _imagePaths[paperId] = imageFile.path;
   }
 
-  // Retrieve image by paper ID
+  // Get image
   File? getImage(String paperId) {
     return _imageStorage[paperId];
   }
 
-  // Get image path by paper ID
+  // Get image path
   String? getImagePath(String paperId) {
     return _imagePaths[paperId];
   }
 
-  // Remove image from storage
+  // Remove image
   void removeImage(String paperId) {
     _imageStorage.remove(paperId);
     _imagePaths.remove(paperId);
   }
 
-  // Check if image exists for paper
+  // Check if image exists
   bool hasImage(String paperId) {
     return _imageStorage.containsKey(paperId);
   }
 }
 
-// =============================================================================
-// PAPER DATA MANAGER - CENTRAL DATA MANAGEMENT CLASS
-// =============================================================================
-// OOP CONCEPTS: Singleton Pattern, Data Encapsulation, Separation of Concerns
-// This class serves as the central data repository with:
-// - Global access to paper data
-// - Notification management
-// - Image storage integration
-// - Paper status management
-// - CRUD operations for papers
+// 🔥 GLOBAL DATA MANAGEMENT
 class PaperDataManager {
-  // Singleton instance
   static final PaperDataManager _instance = PaperDataManager._internal();
 
-  // Factory constructor
   factory PaperDataManager() {
     return _instance;
   }
 
-  // Private constructor
   PaperDataManager._internal();
 
-  // Composition: Contains an ImageStorageManager instance
+  // Image storage manager
   final ImageStorageManager imageStorage = ImageStorageManager();
 
-  // SHARED PAPERS LIST - Central data store accessible by both Admin and Student
-  // Using List of Maps for flexible data structure
+  // 🔥 SHARED PAPERS LIST - Both Admin and Student can access
   List<Map<String, dynamic>> allPapers = [
     {
       'id': '1',
@@ -651,37 +546,70 @@ class PaperDataManager {
       'subject': 'Computer Science',
       'date': '2024-01-15',
       'fileSize': '12MB',
-      'status': 'pending', // Paper status: pending, approved, rejected
+      'status': 'pending',
       'fileType': 'PDF',
       'abstract':
           'This paper explores the fundamentals of machine learning algorithms.',
-      'uploadedBy': 'student', // Uploader type: student or admin
-      'isPublic': false, // Visibility to students
-      'hasImage': true, // Whether paper has associated image
+      'uploadedBy': 'student',
+      'isPublic': false,
+      'hasImage': true,
     },
-    // More sample papers...
+    {
+      'id': '2',
+      'title': 'Quantum Physics Research',
+      'studentId': 'STU2024002',
+      'studentName': 'Jane Smith',
+      'subject': 'Physics',
+      'date': '2024-01-10',
+      'fileSize': '8MB',
+      'status': 'approved',
+      'fileType': 'PDF',
+      'abstract': 'Research on quantum mechanics principles.',
+      'grade': 'A',
+      'feedback': 'Excellent research work',
+      'uploadedBy': 'student',
+      'isPublic': true,
+      'hasImage': true,
+    },
+    {
+      'id': '3',
+      'title': 'Advanced Mathematics Paper',
+      'studentId': 'ADMIN',
+      'studentName': 'Admin Fahdil',
+      'subject': 'Mathematics',
+      'date': '2024-01-20',
+      'fileSize': '5MB',
+      'status': 'approved',
+      'fileType': 'PDF',
+      'abstract': 'Admin uploaded mathematics paper for students.',
+      'grade': 'A',
+      'feedback': 'Uploaded by admin',
+      'uploadedBy': 'admin',
+      'isPublic': true,
+      'hasImage': true,
+    },
   ];
 
-  // NOTIFICATIONS FOR ADMIN - List of notification objects
+  // 🔥 NOTIFICATIONS FOR ADMIN
   List<Map<String, dynamic>> adminNotifications = [
     {
       'id': '1',
       'title': 'New Paper Submission',
       'message': 'John Doe submitted "Introduction to Machine Learning"',
       'time': '2 hours ago',
-      'read': false, // Unread notification flag
+      'read': false,
     },
   ];
 
-  // Add new paper to the system
+  // 🔥 Add new paper
   void addPaper(Map<String, dynamic> paper, {File? imageFile}) {
     allPapers.add(paper);
     if (imageFile != null) {
-      imageStorage.storeImage(paper['id'], imageFile); // Store associated image
+      imageStorage.storeImage(paper['id'], imageFile);
     }
   }
 
-  // Update paper status (approve/reject)
+  // 🔥 Update paper status
   void updatePaperStatus(
     String paperId,
     String status, {
@@ -698,17 +626,15 @@ class PaperDataManager {
         allPapers[index]['feedback'] = feedback;
       }
       if (status == 'approved') {
-        allPapers[index]['isPublic'] = true; // Make approved papers public
+        allPapers[index]['isPublic'] = true;
       }
     }
   }
 
-  // Add notification for admin
+  // 🔥 Add notification for admin
   void addNotification(String title, String message) {
     adminNotifications.insert(0, {
-      // Insert at beginning for chronological order
-      'id':
-          'NT${DateTime.now().millisecondsSinceEpoch}', // Unique ID with timestamp
+      'id': 'NT${DateTime.now().millisecondsSinceEpoch}',
       'title': title,
       'message': message,
       'time': 'Just now',
@@ -716,46 +642,38 @@ class PaperDataManager {
     });
   }
 
-  // Get papers with pending status
+  // 🔥 Get pending papers
   List<Map<String, dynamic>> getPendingPapers() {
     return allPapers.where((paper) => paper['status'] == 'pending').toList();
   }
 
-  // Get approved papers
+  // 🔥 Get approved papers (public)
   List<Map<String, dynamic>> getApprovedPapers() {
     return allPapers.where((paper) => paper['status'] == 'approved').toList();
   }
 
-  // Get all public papers (visible to students)
+  // 🔥 Get all public papers
   List<Map<String, dynamic>> getPublicPapers() {
     return allPapers.where((paper) => paper['isPublic'] == true).toList();
   }
 
-  // Remove paper completely from system
+  // 🔥 Remove paper completely
   void removePaper(String paperId) {
     allPapers.removeWhere((paper) => paper['id'] == paperId);
-    imageStorage.removeImage(paperId); // Also remove associated image
+    imageStorage.removeImage(paperId);
   }
 
-  // Get image for specific paper
+  // 🔥 Get image for paper
   File? getPaperImage(String paperId) {
     return imageStorage.getImage(paperId);
   }
 
-  // Check if paper has associated image
+  // 🔥 Check if paper has image
   bool paperHasImage(String paperId) {
     return imageStorage.hasImage(paperId);
   }
 }
 
-// =============================================================================
-// ADMIN HOME PAGE - MAIN ADMINISTRATOR INTERFACE
-// =============================================================================
-// This is the main dashboard for administrators featuring:
-// - Paper review and approval system
-// - Notification management
-// - Paper upload functionality
-// - Analytics and file management
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
 
@@ -764,29 +682,26 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  // Access to central data manager (Singleton pattern)
   final PaperDataManager _dataManager = PaperDataManager();
 
-  // FILE PICKER STATE - For admin paper uploads
-  File? _selectedAdminFile; // Selected image file
-  final ImagePicker _picker = ImagePicker(); // Image picker instance
+  // 🔥 FILE PICKER STATE FOR ADMIN
+  File? _selectedAdminFile;
+  final ImagePicker _picker = ImagePicker();
 
-  // FUNCTION TO PICK FILE FOR ADMIN - Using image_picker package
-  // This demonstrates device hardware access (camera/gallery)
+  // 🔥 FUNCTION TO PICK FILE FOR ADMIN
   Future<void> _pickAdminFile(ImageSource source) async {
     final XFile? file = await _picker.pickImage(
-      source: source, // Can be ImageSource.camera or ImageSource.gallery
-      imageQuality: 85, // Compress image to reduce size
+      source: source,
+      imageQuality: 85,
     );
 
     if (file != null) {
       setState(() {
-        _selectedAdminFile = File(file.path); // Convert to File object
+        _selectedAdminFile = File(file.path);
       });
     }
   }
 
-  // Accept paper with grade and feedback
   void _acceptPaper(String paperId, String grade, String feedback) {
     setState(() {
       _dataManager.updatePaperStatus(
@@ -798,7 +713,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     });
   }
 
-  // Reject paper with reason
   void _rejectPaper(String paperId, String reason) {
     setState(() {
       final index = _dataManager.allPapers.indexWhere(
@@ -814,23 +728,22 @@ class _AdminHomePageState extends State<AdminHomePage> {
     });
   }
 
-  // Remove paper completely (even if approved)
+  // 🔥 REMOVE PAPER COMPLETELY (EVEN IF APPROVED)
   void _removePaper(String paperId) {
     setState(() {
       _dataManager.removePaper(paperId);
     });
   }
 
-  // Upload paper as admin (creates public paper)
   void _uploadPaperAsAdmin(Map<String, dynamic> paperData) {
     setState(() {
       final newPaper = {
-        ...paperData, // Spread operator to copy existing data
-        'id': 'ADM${DateTime.now().millisecondsSinceEpoch}', // Unique admin ID
+        ...paperData,
+        'id': 'ADM${DateTime.now().millisecondsSinceEpoch}',
         'uploadedBy': 'Admin Fahdil',
         'uploadDate': DateTime.now().toString().split(' ')[0],
-        'status': 'approved', // Admin papers auto-approved
-        'isPublic': true, // Admin papers are always public
+        'status': 'approved',
+        'isPublic': true,
         'grade': 'A',
         'feedback': 'Uploaded by admin',
         'hasImage': _selectedAdminFile != null,
@@ -843,13 +756,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
       );
     });
 
-    // Reset file selection after upload
+    // Reset file selection
     setState(() {
       _selectedAdminFile = null;
     });
   }
 
-  // Mark notification as read
+  // 🔥 MARK NOTIFICATION AS READ
   void _markNotificationAsRead(String notificationId) {
     setState(() {
       final index = _dataManager.adminNotifications.indexWhere(
@@ -861,7 +774,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
     });
   }
 
-  // Get count of unread notifications
+  // 🔥 GET UNREAD NOTIFICATIONS COUNT
   int getUnreadNotificationsCount() {
     return _dataManager.adminNotifications
         .where((n) => n['read'] == false)
@@ -870,7 +783,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Get data for display
     final pendingPapers = _dataManager.getPendingPapers();
     final approvedPapers = _dataManager.getApprovedPapers();
     final unreadCount = getUnreadNotificationsCount();
@@ -879,7 +791,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
       appBar: AppBar(
         title: const Text('Admin Management'),
         actions: [
-          // NOTIFICATION BELL WITH BADGE - Shows unread count
+          // 🔥 NOTIFICATION BELL WITH BADGE
           Stack(
             children: [
               IconButton(
@@ -887,7 +799,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 onPressed: () => _showNotifications(context),
                 tooltip: 'Notifications',
               ),
-              // Badge showing unread count
               if (unreadCount > 0)
                 Positioned(
                   right: 8,
@@ -915,13 +826,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 ),
             ],
           ),
-          // Upload paper button
           IconButton(
             icon: const Icon(Icons.upload),
             onPressed: () => _showAdminUploadDialog(context),
             tooltip: 'Upload Paper',
           ),
-          // Logout button
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
@@ -939,7 +848,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Admin icon
               const Icon(
                 Icons.admin_panel_settings,
                 size: 150,
@@ -959,14 +867,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 ),
               ),
               const SizedBox(height: 30),
-
-              // Feature cards using Wrap for responsive layout
               Wrap(
                 spacing: 0,
                 runSpacing: 0,
                 alignment: WrapAlignment.center,
                 children: [
-                  // Pending Papers card
                   _buildAdminFeatureCard(
                     icon: Icons.pending_actions,
                     title: 'Pending Papers',
@@ -976,7 +881,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showPendingPapersScreen(context);
                     },
                   ),
-                  // Approved Papers card
                   _buildAdminFeatureCard(
                     icon: Icons.approval,
                     title: 'Approved Papers',
@@ -986,7 +890,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showApprovedPapersScreen(context);
                     },
                   ),
-                  // Notifications card
                   _buildAdminFeatureCard(
                     icon: Icons.notifications,
                     title: 'Notifications',
@@ -996,7 +899,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showNotifications(context);
                     },
                   ),
-                  // Upload Paper card
                   _buildAdminFeatureCard(
                     icon: Icons.upload_file,
                     title: 'Upload Paper',
@@ -1005,7 +907,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showAdminUploadDialog(context);
                     },
                   ),
-                  // Analytics card
                   _buildAdminFeatureCard(
                     icon: Icons.analytics,
                     title: 'Analytics',
@@ -1014,7 +915,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       _showAnalyticsScreen(context);
                     },
                   ),
-                  // File Management card
                   _buildAdminFeatureCard(
                     icon: Icons.delete,
                     title: 'Manage Files',
@@ -1032,7 +932,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Reusable admin feature card widget
   Widget _buildAdminFeatureCard({
     required IconData icon,
     required String title,
@@ -1081,7 +980,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 ),
               ],
             ),
-            // Count badge for items like pending papers
             if (count != null)
               Positioned(
                 top: 10,
@@ -1108,13 +1006,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show pending papers in a modal bottom sheet
   void _showPendingPapersScreen(BuildContext context) {
     final pendingPapers = _dataManager.getPendingPapers();
 
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allow full screen expansion
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -1123,9 +1020,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
           builder: (context, setState) {
             return Container(
               padding: const EdgeInsets.all(20),
-              height:
-                  MediaQuery.of(context).size.height *
-                  0.9, // 90% of screen height
+              height: MediaQuery.of(context).size.height * 0.9,
               child: Column(
                 children: [
                   const Text(
@@ -1154,7 +1049,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pop(context); // Close modal
+                      Navigator.pop(context);
                     },
                     child: const Text('Close'),
                   ),
@@ -1167,7 +1062,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Build individual pending paper item
   Widget _buildPendingPaperItem(
     Map<String, dynamic> paper,
     BuildContext context,
@@ -1196,7 +1090,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Accept button
             IconButton(
               icon: const Icon(Icons.check_circle, color: Colors.green),
               onPressed: () {
@@ -1204,7 +1097,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               tooltip: 'Accept Paper',
             ),
-            // Reject button
             IconButton(
               icon: const Icon(Icons.cancel, color: Colors.red),
               onPressed: () {
@@ -1212,7 +1104,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               tooltip: 'Reject Paper',
             ),
-            // View details button
             IconButton(
               icon: const Icon(Icons.visibility, color: Colors.blue),
               onPressed: () {
@@ -1226,7 +1117,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show dialog for accepting a paper
   void _showAcceptPaperDialog(
     BuildContext context,
     Map<String, dynamic> paper,
@@ -1250,7 +1140,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     Text('Student ID: ${paper['studentId']}'),
                     const SizedBox(height: 20),
                     const Text('Assign Grade:'),
-                    // Grade dropdown
                     DropdownButtonFormField<String>(
                       value: selectedGrade,
                       items: const [
@@ -1272,7 +1161,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Feedback text field
                     TextField(
                       controller: feedbackController,
                       maxLines: 3,
@@ -1318,7 +1206,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     );
 
-                    // Add notification about approval
+                    // 🔥 ADD NOTIFICATION
                     _dataManager.addNotification(
                       'Paper Approved',
                       'You approved "${paper['title']}" with grade $selectedGrade',
@@ -1336,7 +1224,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show dialog for rejecting a paper
   void _showRejectPaperDialog(
     BuildContext context,
     Map<String, dynamic> paper,
@@ -1391,7 +1278,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                 );
 
-                // Add notification about rejection
+                // 🔥 ADD NOTIFICATION
                 _dataManager.addNotification(
                   'Paper Rejected',
                   'You rejected "${paper['title']}"',
@@ -1407,7 +1294,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // View paper details with image preview
   void _viewPaperDetails(BuildContext context, Map<String, dynamic> paper) {
     final hasImage = _dataManager.paperHasImage(paper['id']);
     final imageFile = _dataManager.getPaperImage(paper['id']);
@@ -1447,7 +1333,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
                   const SizedBox(height: 20),
 
-                  // IMAGE PREVIEW SECTION - Shows uploaded image if exists
+                  // 🔥 IMAGE PREVIEW SECTION
                   if (hasImage && imageFile != null)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1492,14 +1378,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ],
                     ),
 
-                  // Paper Details section
+                  // Paper Details
                   const Text(
                     'Paper Details:',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
 
-                  // Reusable detail row widget
                   _buildDetailRow('Student:', paper['studentName']),
                   _buildDetailRow('Student ID:', paper['studentId']),
                   _buildDetailRow('Subject:', paper['subject']),
@@ -1513,7 +1398,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
                   const SizedBox(height: 20),
 
-                  // Abstract section
                   const Text(
                     'Abstract:',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -1521,7 +1405,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   const SizedBox(height: 10),
                   Text(paper['abstract'] ?? 'No abstract available'),
 
-                  // Feedback section if exists
                   if (paper['feedback'] != null &&
                       paper['feedback'].isNotEmpty) ...[
                     const SizedBox(height: 20),
@@ -1538,7 +1421,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
                   const SizedBox(height: 30),
 
-                  // Action buttons
                   Row(
                     children: [
                       Expanded(
@@ -1572,7 +1454,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Reusable widget for displaying paper details in rows
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -1601,7 +1482,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show approved papers in modal bottom sheet
   void _showApprovedPapersScreen(BuildContext context) {
     final approvedPapers = _dataManager.getApprovedPapers();
 
@@ -1651,7 +1531,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Build individual approved paper item
   Widget _buildApprovedPaperItem(
     Map<String, dynamic> paper,
     BuildContext context,
@@ -1664,7 +1543,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
         leading: Stack(
           children: [
             const Icon(Icons.picture_as_pdf, color: Colors.red, size: 40),
-            // Image indicator badge
             if (hasImage)
               Positioned(
                 right: 0,
@@ -1692,7 +1570,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
             Text('Date: ${paper['date']} • Grade: ${paper['grade'] ?? 'N/A'}'),
             if (paper['feedback'] != null && paper['feedback'].isNotEmpty)
               Text('Feedback: ${paper['feedback']}'),
-            // Status chips
             Wrap(
               spacing: 4,
               children: [
@@ -1714,7 +1591,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // View button
             IconButton(
               icon: const Icon(Icons.visibility, color: Colors.blue),
               onPressed: () {
@@ -1722,7 +1598,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               tooltip: 'View Details',
             ),
-            // Download button
             IconButton(
               icon: const Icon(Icons.download, color: Colors.green),
               onPressed: () {
@@ -1730,7 +1605,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
               tooltip: 'Download',
             ),
-            // Delete button
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
               onPressed: () {
@@ -1744,7 +1618,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show confirmation dialog for deleting approved paper
   void _showDeleteApprovedPaperDialog(
     BuildContext context,
     Map<String, dynamic> paper,
@@ -1784,7 +1657,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   ),
                 );
 
-                // Add notification about deletion
+                // 🔥 ADD NOTIFICATION
                 _dataManager.addNotification(
                   'Paper Deleted',
                   'You deleted "${paper['title']}" from the system',
@@ -1801,7 +1674,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // View detailed approved paper with image preview
   void _viewApprovedPaperDetails(
     BuildContext context,
     Map<String, dynamic> paper,
@@ -1844,7 +1716,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
                   const SizedBox(height: 20),
 
-                  // IMAGE PREVIEW SECTION for approved papers
+                  // 🔥 IMAGE PREVIEW SECTION
                   if (hasImage && imageFile != null)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1868,7 +1740,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                             borderRadius: BorderRadius.circular(8),
                             child: Image.file(
                               imageFile,
-                              fit: BoxFit.contain, // Show entire image
+                              fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) {
                                 return const Center(
                                   child: Column(
@@ -1912,7 +1784,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
                   const SizedBox(height: 20),
 
-                  // Feedback section
                   if (paper['feedback'] != null &&
                       paper['feedback'].isNotEmpty) ...[
                     const Text(
@@ -1927,7 +1798,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     const SizedBox(height: 20),
                   ],
 
-                  // Abstract section
                   const Text(
                     'Abstract:',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -1937,7 +1807,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
                   const SizedBox(height: 20),
 
-                  // Public availability notice
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -1958,7 +1827,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
 
                   const SizedBox(height: 30),
 
-                  // Action buttons
                   Row(
                     children: [
                       Expanded(
@@ -2000,7 +1868,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Simulate paper download
   void _downloadPaper(Map<String, dynamic> paper) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -2010,7 +1877,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show notifications in modal bottom sheet
   void _showNotifications(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -2046,10 +1912,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         },
                       ),
               ),
-              // Mark all as read button
               ElevatedButton(
                 onPressed: () {
-                  // Mark all notifications as read
+                  // Mark all as read
                   for (var notification in _dataManager.adminNotifications) {
                     notification['read'] = true;
                   }
@@ -2065,14 +1930,12 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Build individual notification item
   Widget _buildNotificationItem(
     Map<String, dynamic> notification,
     BuildContext context,
   ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
-      // Different background for unread notifications
       color: notification['read'] ? Colors.white : Colors.blue[50],
       child: ListTile(
         leading: notification['read']
@@ -2097,7 +1960,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
             ),
           ],
         ),
-        // Mark as read button for unread notifications
         trailing: notification['read']
             ? null
             : IconButton(
@@ -2114,7 +1976,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show admin upload dialog
   void _showAdminUploadDialog(BuildContext context) {
     final titleController = TextEditingController();
     final subjectController = TextEditingController();
@@ -2134,9 +1995,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
             return SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(
-                    context,
-                  ).viewInsets.bottom, // Adjust for keyboard
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
                   left: 24,
                   right: 24,
                   top: 24,
@@ -2153,8 +2012,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // File type selection
                     const Text('Select file type:'),
                     Wrap(
                       spacing: 8,
@@ -2171,8 +2028,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       }).toList(),
                     ),
                     const SizedBox(height: 16),
-
-                    // Subject selection
                     const Text('Select subject:'),
                     DropdownButtonFormField<String>(
                       value: selectedSubject,
@@ -2181,7 +2036,26 @@ class _AdminHomePageState extends State<AdminHomePage> {
                           value: 'Computer Science',
                           child: Text('Computer Science'),
                         ),
-                        // More subjects...
+                        DropdownMenuItem(
+                          value: 'Mathematics',
+                          child: Text('Mathematics'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Physics',
+                          child: Text('Physics'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Chemistry',
+                          child: Text('Chemistry'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Economics',
+                          child: Text('Economics'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'General',
+                          child: Text('General'),
+                        ),
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -2194,8 +2068,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Title input
                     TextField(
                       controller: titleController,
                       decoration: const InputDecoration(
@@ -2205,8 +2077,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Description input
                     TextField(
                       controller: descriptionController,
                       maxLines: 3,
@@ -2218,7 +2088,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     ),
                     const SizedBox(height: 16),
 
-                    // FILE PICKER SECTION - Image preview and selection
+                    // 🔥 FILE PICKER SECTION
                     Container(
                       width: double.infinity,
                       height: 200,
@@ -2270,7 +2140,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     ),
                     const SizedBox(height: 12),
 
-                    // CAMERA/GALLERY BUTTONS - Device hardware access
+                    // 🔥 CAMERA/GALLERY BUTTONS
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -2288,8 +2158,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     ),
 
                     const SizedBox(height: 24),
-
-                    // Action buttons
                     Row(
                       children: [
                         Expanded(
@@ -2302,7 +2170,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              // Form validation
                               if (titleController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -2366,7 +2233,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show file management screen
   void _showFileManagementScreen(BuildContext context) {
     final approvedPapers = _dataManager.getApprovedPapers();
 
@@ -2421,7 +2287,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Build file management item
   Widget _buildFileManagementItem(
     Map<String, dynamic> paper,
     BuildContext context,
@@ -2485,7 +2350,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Show analytics dashboard
   void _showAnalyticsScreen(BuildContext context) {
     final pendingPapers = _dataManager.getPendingPapers();
     final approvedPapers = _dataManager.getApprovedPapers();
@@ -2548,7 +2412,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 
-  // Build analytics item row
   Widget _buildAnalyticsItem(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -2564,16 +2427,90 @@ class _AdminHomePageState extends State<AdminHomePage> {
       ),
     );
   }
+
+  void _showAdminMessages(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Column(
+            children: [
+              const Text(
+                'Admin Messages',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView(
+                  children: const [
+                    MessageBubble(
+                      text: 'Hello Admin, when will my paper be reviewed?',
+                      isMe: false,
+                      time: '10:30 AM',
+                    ),
+                    MessageBubble(
+                      text:
+                          'Your paper is in the queue, will be reviewed within 24 hours.',
+                      isMe: true,
+                      time: '10:35 AM',
+                    ),
+                    MessageBubble(
+                      text: 'Thank you!',
+                      isMe: false,
+                      time: '10:36 AM',
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 16),
+                decoration: BoxDecoration(
+                  border: Border(top: BorderSide(color: Colors.grey.shade300)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Type your reply...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    CircleAvatar(
+                      backgroundColor: Colors.blue,
+                      child: IconButton(
+                        icon: const Icon(Icons.send, color: Colors.white),
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Message sent successfully!'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
-// =============================================================================
-// STUDENT HOME PAGE - MAIN STUDENT INTERFACE
-// =============================================================================
-// This is the main dashboard for students featuring:
-// - Paper submission system
-// - Public paper browsing
-// - AI exercise generator
-// - Profile management
 class StudentHomePage extends StatefulWidget {
   const StudentHomePage({super.key});
 
@@ -2582,13 +2519,8 @@ class StudentHomePage extends StatefulWidget {
 }
 
 class _StudentHomePageState extends State<StudentHomePage> {
-  // ValueNotifier for reactive bottom navigation
   final ValueNotifier<int> _selectedIndex = ValueNotifier(0);
-
-  // Selected subjects for AI exercises
   final List<String> _selectedSubjects = ['Computer Science', 'Physics'];
-
-  // Sample exercises data
   final List<Map<String, dynamic>> _exercises = [
     {
       'id': '1',
@@ -2597,17 +2529,23 @@ class _StudentHomePageState extends State<StudentHomePage> {
       'date': '2 hours ago',
       'completed': false,
     },
-    // More exercises...
+    {
+      'id': '2',
+      'title': 'Quantum Mechanics Exercises',
+      'subject': 'Physics',
+      'date': '1 day ago',
+      'completed': true,
+    },
   ];
 
-  // FILE PICKER STATE FOR STUDENT
+  // 🔥 FILE PICKER STATE FOR STUDENT
   File? _selectedStudentFile;
   final ImagePicker _studentPicker = ImagePicker();
 
-  // DATA MANAGER ACCESS
+  // 🔥 DATA MANAGER
   final PaperDataManager _dataManager = PaperDataManager();
 
-  // FUNCTION TO PICK FILE FOR STUDENT
+  // 🔥 FUNCTION TO PICK FILE FOR STUDENT
   Future<void> _pickStudentFile(ImageSource source) async {
     final XFile? file = await _studentPicker.pickImage(
       source: source,
@@ -2629,7 +2567,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Get user-specific data
+    // 🔥 GET USER'S PENDING SUBMISSIONS
     final userPendingSubmissions = _dataManager.allPapers
         .where(
           (paper) =>
@@ -2637,6 +2575,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
         )
         .toList();
 
+    // 🔥 GET PUBLIC PAPERS (APPROVED PAPERS)
     final publicPapers = _dataManager.getPublicPapers();
 
     return Scaffold(
@@ -2647,7 +2586,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
         elevation: 0,
         title: Row(
           children: [
-            // User avatar
             const CircleAvatar(
               backgroundColor: Colors.blue,
               child: Icon(Icons.person, color: Colors.white, size: 24),
@@ -2680,7 +2618,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
           ],
         ),
         actions: [
-          // Notifications with badge
           IconButton(
             icon: Stack(
               children: [
@@ -2689,7 +2626,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   color: Colors.grey,
                   size: 22,
                 ),
-                // Show badge if user has pending papers
+                // 🔥 SHOW BADGE IF USER HAS PENDING PAPERS
                 if (userPendingSubmissions.isNotEmpty)
                   Positioned(
                     right: 0,
@@ -2720,7 +2657,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
               _showNotifications(context);
             },
           ),
-          // Messages button
           IconButton(
             icon: const Icon(
               Icons.chat_bubble_outline,
@@ -2729,7 +2665,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
             ),
             onPressed: _openMessages,
           ),
-          // More options menu
           PopupMenuButton(
             icon: const Icon(Icons.more_vert, color: Colors.grey),
             itemBuilder: (context) => const [
@@ -2755,14 +2690,12 @@ class _StudentHomePageState extends State<StudentHomePage> {
           ),
         ],
       ),
-      // Reactive body based on selected tab
       body: ValueListenableBuilder<int>(
         valueListenable: _selectedIndex,
         builder: (context, index, child) {
           return _buildBody(index, userPendingSubmissions, publicPapers);
         },
       ),
-      // Floating action button for paper upload
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showUploadDialog,
         icon: const Icon(Icons.upload, size: 20),
@@ -2770,7 +2703,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
-      // Bottom navigation
       bottomNavigationBar: ValueListenableBuilder<int>(
         valueListenable: _selectedIndex,
         builder: (context, index, child) {
@@ -2806,7 +2738,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Switch between different body sections based on selected index
   Widget _buildBody(
     int index,
     List<Map<String, dynamic>> pendingSubmissions,
@@ -2826,7 +2757,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     }
   }
 
-  // Dashboard section
   Widget _buildDashboard(
     List<Map<String, dynamic>> pendingSubmissions,
     List<Map<String, dynamic>> publicPapers,
@@ -2850,7 +2780,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Quick stats section
   Widget _buildQuickStats(
     List<Map<String, dynamic>> pendingSubmissions,
     List<Map<String, dynamic>> publicPapers,
@@ -2902,7 +2831,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Individual stat item widget
   Widget _buildStatItem(
     IconData icon,
     String value,
@@ -2926,7 +2854,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Pending submissions section
   Widget _buildPendingSubmissions(
     List<Map<String, dynamic>> pendingSubmissions,
   ) {
@@ -2945,7 +2872,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Public papers preview section
   Widget _buildPublicPapersPreview(List<Map<String, dynamic>> publicPapers) {
     final recentPapers = publicPapers.take(3).toList();
 
@@ -2960,8 +2886,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             TextButton(
-              onPressed: () =>
-                  _selectedIndex.value = 1, // Navigate to public papers tab
+              onPressed: () => _selectedIndex.value = 1,
               child: const Text('View All'),
             ),
           ],
@@ -2980,7 +2905,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Paper card widget
   Widget _buildPaperCard(Map<String, dynamic> paper, {bool isPending = false}) {
     final hasImage = _dataManager.paperHasImage(paper['id']);
 
@@ -3007,7 +2931,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   size: 24,
                 ),
               ),
-              // Image indicator
               if (hasImage)
                 Positioned(
                   right: 0,
@@ -3073,10 +2996,9 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // AI exercise card
   Widget _buildAIExerciseCard() {
     return GestureDetector(
-      onTap: () => _selectedIndex.value = 2, // Navigate to AI exercises tab
+      onTap: () => _selectedIndex.value = 2,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
@@ -3127,7 +3049,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Full public papers list
   Widget _buildPublicPapersList(List<Map<String, dynamic>> publicPapers) {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -3147,7 +3068,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
               leading: Stack(
                 children: [
                   const Icon(Icons.picture_as_pdf, color: Colors.red, size: 35),
-                  // Image indicator
                   if (hasImage)
                     Positioned(
                       right: 0,
@@ -3178,7 +3098,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                 children: [
                   Text('Subject: ${paper['subject']}'),
                   const SizedBox(height: 4),
-                  // Status chips
                   Wrap(
                     spacing: 8,
                     children: [
@@ -3235,7 +3154,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // AI exercises section
   Widget _buildAIExercises() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -3260,7 +3178,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Subject selection for AI exercises
   Widget _buildSubjectSelection() {
     final subjects = [
       'Computer Science',
@@ -3327,7 +3244,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Generated exercises list
   Widget _buildGeneratedExercises() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3387,7 +3303,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Profile section
   Widget _buildProfile(List<Map<String, dynamic>> pendingSubmissions) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -3410,7 +3325,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
           ),
           const SizedBox(height: 32),
 
-          // Pending submissions status card
+          // Pending submissions status
           if (pendingSubmissions.isNotEmpty) ...[
             Card(
               color: Colors.orange[50],
@@ -3444,7 +3359,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
             const SizedBox(height: 20),
           ],
 
-          // Profile menu items
           _buildProfileMenuItem(Icons.history, 'My Submission History', () {
             _showSubmissionHistory(context);
           }),
@@ -3469,7 +3383,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Profile menu item widget
   Widget _buildProfileMenuItem(
     IconData icon,
     String text,
@@ -3490,7 +3403,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Show upload dialog for students
   void _showUploadDialog() {
     final titleController = TextEditingController();
     final subjectController = TextEditingController();
@@ -3527,8 +3439,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // File type selection
                     const Text('Select file type:'),
                     Wrap(
                       spacing: 8,
@@ -3545,8 +3455,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       }).toList(),
                     ),
                     const SizedBox(height: 16),
-
-                    // Subject selection
                     const Text('Select subject:'),
                     DropdownButtonFormField<String>(
                       initialValue: selectedSubject,
@@ -3555,7 +3463,18 @@ class _StudentHomePageState extends State<StudentHomePage> {
                           value: 'Computer Science',
                           child: Text('Computer Science'),
                         ),
-                        // More subjects...
+                        DropdownMenuItem(
+                          value: 'Mathematics',
+                          child: Text('Mathematics'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Physics',
+                          child: Text('Physics'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Economics',
+                          child: Text('Economics'),
+                        ),
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -3568,8 +3487,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Title input
                     TextField(
                       controller: titleController,
                       decoration: const InputDecoration(
@@ -3578,8 +3495,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // Description input
                     TextField(
                       controller: descriptionController,
                       maxLines: 3,
@@ -3590,7 +3505,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ),
                     const SizedBox(height: 16),
 
-                    // FILE PICKER SECTION for students
+                    // 🔥 FILE PICKER SECTION
                     Container(
                       width: double.infinity,
                       height: 200,
@@ -3642,7 +3557,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ),
                     const SizedBox(height: 12),
 
-                    // CAMERA/GALLERY BUTTONS for students
+                    // 🔥 CAMERA/GALLERY BUTTONS
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -3661,8 +3576,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                     ),
 
                     const SizedBox(height: 24),
-
-                    // Action buttons
                     Row(
                       children: [
                         Expanded(
@@ -3675,7 +3588,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              // Form validation
                               if (titleController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -3696,7 +3608,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                 return;
                               }
 
-                              // CREATE NEW PAPER WITH PENDING STATUS
+                              // 🔥 CREATE NEW PAPER WITH PENDING STATUS
                               final newPaper = {
                                 'id':
                                     'STU${DateTime.now().millisecondsSinceEpoch}',
@@ -3719,13 +3631,13 @@ class _StudentHomePageState extends State<StudentHomePage> {
                                 'hasImage': true,
                               };
 
-                              // ADD TO GLOBAL DATA MANAGER WITH IMAGE
+                              // 🔥 ADD TO GLOBAL DATA MANAGER WITH IMAGE
                               _dataManager.addPaper(
                                 newPaper,
                                 imageFile: _selectedStudentFile,
                               );
 
-                              // ADD NOTIFICATION FOR ADMIN
+                              // 🔥 ADD NOTIFICATION FOR ADMIN
                               _dataManager.addNotification(
                                 'New Paper Submission',
                                 'Student submitted "${titleController.text}" for review',
@@ -3764,7 +3676,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Open messages to admin
   void _openMessages() {
     showModalBottomSheet(
       context: context,
@@ -3805,7 +3716,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                   ],
                 ),
               ),
-              // Message input
               Container(
                 padding: const EdgeInsets.only(top: 16),
                 decoration: BoxDecoration(
@@ -3848,7 +3758,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Show notifications for student
   void _showNotifications(BuildContext context) {
     final userPendingSubmissions = _dataManager.allPapers
         .where(
@@ -3898,7 +3807,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
                         }).toList(),
                       ),
               ),
-              // New submission button
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -3913,7 +3821,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Show paper details with image preview
   void _showPaperDetails(Map<String, dynamic> paper) {
     final hasImage = _dataManager.paperHasImage(paper['id']);
     final imageFile = _dataManager.getPaperImage(paper['id']);
@@ -3953,7 +3860,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
                   const SizedBox(height: 20),
 
-                  // IMAGE PREVIEW SECTION - Students can see approved paper images
+                  // 🔥 IMAGE PREVIEW SECTION - Students can see approved paper images
                   if (hasImage &&
                       imageFile != null &&
                       paper['status'] == 'approved')
@@ -4003,7 +3910,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
                       ],
                     ),
 
-                  // FOR PENDING PAPERS, SHOW UPLOADED IMAGE (ONLY OWNER CAN SEE)
+                  // 🔥 FOR PENDING PAPERS, SHOW UPLOADED IMAGE (ONLY OWNER CAN SEE)
                   if (hasImage &&
                       imageFile != null &&
                       paper['status'] == 'pending' &&
@@ -4099,7 +4006,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
                   const SizedBox(height: 20),
 
-                  // Abstract section
                   const Text(
                     'Abstract:',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -4109,7 +4015,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
                   const SizedBox(height: 20),
 
-                  // Public availability notice
                   if (paper['isPublic'] == true)
                     Container(
                       padding: const EdgeInsets.all(12),
@@ -4131,7 +4036,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
 
                   const SizedBox(height: 30),
 
-                  // Action buttons
                   Row(
                     children: [
                       Expanded(
@@ -4161,7 +4065,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Reusable detail row widget for student
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -4190,7 +4093,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Simulate paper download
   void _downloadPaper(Map<String, dynamic> paper) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -4200,12 +4102,11 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Generate AI exercises
   void _generateExercises() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Generating exercises...'),
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
       ),
     );
 
@@ -4230,7 +4131,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     });
   }
 
-  // Show exercise details
   void _showExerciseDetails(Map<String, dynamic> exercise) {
     showDialog(
       context: context,
@@ -4271,7 +4171,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Mark exercise as completed
   void _markExerciseCompleted(String id) {
     setState(() {
       final index = _exercises.indexWhere((e) => e['id'] == id);
@@ -4288,7 +4187,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Download exercise
   void _downloadExercise(Map<String, dynamic> exercise) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -4298,7 +4196,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Show submission history
   void _showSubmissionHistory(BuildContext context) {
     final userPapers = _dataManager.allPapers
         .where((paper) => paper['studentId'] == 'STU001')
@@ -4352,7 +4249,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Show help and support
   void _showHelpSupport(BuildContext context) {
     showDialog(
       context: context,
@@ -4395,7 +4291,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
     );
   }
 
-  // Get icon for subject
   IconData _getSubjectIcon(String subject) {
     switch (subject) {
       case 'Computer Science':
@@ -4410,13 +4305,6 @@ class _StudentHomePageState extends State<StudentHomePage> {
   }
 }
 
-// =============================================================================
-// MESSAGE BUBBLE WIDGET - REUSABLE CHAT COMPONENT
-// =============================================================================
-// This widget represents individual chat messages with:
-// - Different styling for sent vs received messages
-// - Timestamp display
-// - Avatar placement based on message origin
 class MessageBubble extends StatelessWidget {
   final String text;
   final bool isMe;
